@@ -1,8 +1,9 @@
 package com.jacemcpherson;
 
-public class Main {
+public class MainController {
 
     public static void main(String[] args) {
 	// write your code here
+        
     }
 }

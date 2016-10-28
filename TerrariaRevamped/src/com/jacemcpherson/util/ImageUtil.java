@@ -5,10 +5,11 @@ import com.jacemcpherson.resources.Resources;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class ImageUtil  {
 
-    public static class ImageLoader implements Runnable {
+    private static class ImageLoader implements Runnable {
 
         private String mFileName;
         private ImageLoaderCallback mCallback;
@@ -16,12 +17,12 @@ public class ImageUtil  {
         private int mWidth = -1;
         private int mHeight = -1;
 
-        public ImageLoader(String fileName, ImageLoaderCallback callback) {
+        ImageLoader(String fileName, ImageLoaderCallback callback) {
             mFileName = fileName;
             mCallback = callback;
         }
 
-        public ImageLoader(String fileName, ImageLoaderCallback callback, int width, int height) {
+        ImageLoader(String fileName, ImageLoaderCallback callback, int width, int height) {
             this(fileName, callback);
             mWidth = width;
             mHeight = height;
@@ -29,16 +30,18 @@ public class ImageUtil  {
 
         @Override
         public void run() {
-            BufferedImage img = null;
             try {
-                img = Resources.getImage(mFileName);
+                BufferedImage img = Resources.getImage(mFileName);
+                ImageCache.putImage(mFileName, img); // we only want to cache the image straight from the file
+
                 if (mWidth > 0 && mHeight > 0) {
                     img = ImageUtil.resizeImage(img, mWidth, mHeight);
                 }
+
+                mCallback.imageLoaded(img, null);
             } catch (IOException e) {
                 mCallback.imageLoaded(null, e);
             }
-            mCallback.imageLoaded(img, null);
         }
     }
 
@@ -46,16 +49,49 @@ public class ImageUtil  {
         public void imageLoaded(BufferedImage image, Exception e);
     }
 
+    private static class ImageCache {
+        private static final HashMap<String, BufferedImage> mCache = new HashMap<>();
+
+        static boolean imageLoaded(String imageName) {
+            return mCache.containsKey(imageName);
+        }
+
+        static boolean putImage(String name, BufferedImage image) {
+            boolean overwriting = mCache.containsKey(name);
+            mCache.put(name, image);
+            return overwriting;
+        }
+
+        static BufferedImage getImage(String imageName) {
+            return mCache.get(imageName);
+        }
+    }
+
     public static void loadImage(String fileName, ImageLoaderCallback callback) {
         loadImage(fileName, -1, -1, callback);
     }
 
-    public static void loadImage(String fileName, int withWidth, int withHeight, ImageLoaderCallback callback) {
-        Thread thread = new Thread(new ImageLoader(fileName, callback, withWidth, withHeight));
-        thread.start();
+    public static void loadImage(String fileName, int withWidth, int withHeight, ImageLoaderCallback callback) throws IllegalArgumentException {
+        if ((withWidth < 0 && withHeight >= 0) || (withWidth >= 0 && withHeight < 0)) {
+            throw new IllegalArgumentException("You must provide either two positive or two negative integers for width and height.");
+        }
+
+        if (ImageCache.imageLoaded(fileName)) {
+            BufferedImage img = ImageCache.getImage(fileName);
+
+            if (withWidth < 0) {
+                img = resizeImage(img, withWidth, withHeight);
+            }
+
+            callback.imageLoaded(img, null);
+
+        } else {
+            Thread thread = new Thread(new ImageLoader(fileName, callback, withWidth, withHeight));
+            thread.start();
+        }
     }
 
-    public static BufferedImage resizeImage(BufferedImage image, int width, int height) {
+    private static BufferedImage resizeImage(BufferedImage image, int width, int height) {
         Image tmp = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 

@@ -3,7 +3,6 @@ package com.jacemcpherson.view;
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.resources.R;
-import com.jacemcpherson.util.Console;
 import com.jacemcpherson.util.ImageUtil;
 
 import java.awt.*;
@@ -36,7 +35,6 @@ public class SplashView extends BaseView {
         if (mLoadingImage) {
             g.drawString("Loading...", getWidth() / 2, getHeight() / 2);
         } else {
-            Console.i("Painting");
             drawBackground(g);
         }
     }
@@ -58,5 +56,15 @@ public class SplashView extends BaseView {
 
     public void setDrawPosition(Point position) {
         mDrawPosition = position;
+    }
+
+    public void changeToRobberBackground() {
+        ImageUtil.loadImage(R.image.robber, 60, 60, (image, e) -> {
+            if (e == null) {
+                setBackground(new Background(image, true));
+                repaint();
+                mLoadingImage = false;
+            }
+        });
     }
 }

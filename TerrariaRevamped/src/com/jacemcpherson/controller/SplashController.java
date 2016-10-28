@@ -27,6 +27,7 @@ public class SplashController extends BaseController {
         int xPos = e.getLocationOnScreen().x - getView().getLocationOnScreen().x;
         int yPos = e.getLocationOnScreen().y - getView().getLocationOnScreen().y;
         getModel().setDrawPosition(xPos, yPos);
+        getModel().changeBackground();
     }
 
     @Override

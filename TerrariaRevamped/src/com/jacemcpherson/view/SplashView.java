@@ -3,28 +3,27 @@ package com.jacemcpherson.view;
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.resources.R;
+import com.jacemcpherson.util.FontUtil;
 import com.jacemcpherson.util.ImageUtil;
 
 import java.awt.*;
-import java.util.List;
 
 public class SplashView extends BaseView {
 
     String mDisplayText = "";
-    Point mDrawPosition = new Point(10, 10);
 
-    boolean mLoadingImage = false;
+    boolean mLoadingBackground = false;
 
     public SplashView(Application application) {
         super(application);
-        setBackground(new Background(Color.red));
-        mLoadingImage = true;
+        setBG(new Background(Color.red));
+        mLoadingBackground = true;
 
-        ImageUtil.loadImage(R.image.bank, 60, 60, (image, e) -> {
+        ImageUtil.loadImage(R.image.bg_splash, (image, e) -> {
             if (e == null) {
-                setBackground(new Background(image, true));
+                setBG(new Background(image, false, true));
                 repaint();
-                mLoadingImage = false;
+                mLoadingBackground = false;
             }
         });
 
@@ -32,38 +31,22 @@ public class SplashView extends BaseView {
 
     @Override
     public void paint(Graphics g) {
-        if (mLoadingImage) {
-            g.drawString("Loading...", getWidth() / 2, getHeight() / 2);
-        } else {
+        if (!mLoadingBackground) {
             drawBackground(g);
         }
-    }
 
-    public void setDisplayText(List<Integer> input) {
-        mDisplayText = "";
-        if (input.size() > 0) {
-            for (Integer i : input.subList(0, input.size() - 1)) {
-                mDisplayText += i + ", ";
-            }
-            mDisplayText += input.get(input.size() - 1);
-        }
-    }
-
-    public void setDrawPosition(int x, int y) {
-        mDrawPosition.x = x;
-        mDrawPosition.y = y;
-    }
-
-    public void setDrawPosition(Point position) {
-        mDrawPosition = position;
+        g.setFont(FontUtil.gameFont(32f));
+        g.setColor(Color.white);
+        int textLength = FontUtil.getDrawWidth(g, "Loading...");
+        g.drawString("Loading...", getWidth() / 2 - textLength / 2, getHeight() / 2);
     }
 
     public void changeToRobberBackground() {
-        ImageUtil.loadImage(R.image.robber, 60, 60, (image, e) -> {
+        ImageUtil.loadImage(R.image.robber, (image, e) -> {
             if (e == null) {
-                setBackground(new Background(image, true));
+                setBG(new Background(image, true, false));
                 repaint();
-                mLoadingImage = false;
+                mLoadingBackground = false;
             }
         });
     }

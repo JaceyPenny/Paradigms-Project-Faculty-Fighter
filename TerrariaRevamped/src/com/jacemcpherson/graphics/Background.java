@@ -10,7 +10,7 @@ import static com.jacemcpherson.graphics.Background.BackgroundType.*;
 
 public class Background {
     enum BackgroundType {
-        IMAGE, IMAGE_TESS, COLOR, EMPTY
+        IMAGE, IMAGE_SCALED, IMAGE_TESS, COLOR, EMPTY
     }
 
     Color mDefaultBackgroundColor = Color.white;
@@ -19,16 +19,25 @@ public class Background {
     BufferedImage mImage;
     Color mColor;
 
-
-    public Background(BufferedImage image, boolean tesselated) {
-        mColor = null;
-        mImage = image;
-        mType = tesselated ? IMAGE_TESS : IMAGE;
+    public Background(BufferedImage image) {
+        this(image, false, false);
     }
 
-    public Background(BufferedImage image, boolean tesselated, Color defaultColor) {
-        this(image, tesselated);
+    public Background(BufferedImage image, boolean tesselated, boolean scaled) {
+        this(image, tesselated, scaled, Color.white);
+    }
+
+    public Background(BufferedImage image, boolean tesselated, boolean scaled, Color defaultColor) {
         mDefaultBackgroundColor = defaultColor;
+        mImage = image;
+
+        if (tesselated) {
+            mType = IMAGE_TESS;
+        } else if (scaled) {
+            mType = IMAGE_SCALED;
+        } else {
+            mType = IMAGE;
+        }
     }
 
     public Background(Color color) {
@@ -48,6 +57,17 @@ public class Background {
                 break;
             case IMAGE:
                 g.drawImage(mImage, 0, 0, mImage.getWidth(), mImage.getHeight(), new Color(0x00FFFFFF), null);
+                break;
+            case IMAGE_SCALED:
+                int newWidth = onView.getWidth();
+                int newHeight = Math.round(mImage.getHeight()  * ((float)newWidth / mImage.getWidth()));
+
+                if (newHeight < onView.getHeight()) {
+                    newHeight = onView.getHeight();
+                    newWidth = Math.round(mImage.getHeight() * ((float)newHeight / mImage.getHeight()));
+                }
+
+                g.drawImage(mImage, 0, 0, newWidth, newHeight, new Color(0x00FFFFFF), null);
                 break;
             case IMAGE_TESS:
                 int compWidth = onView.getWidth();

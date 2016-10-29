@@ -79,7 +79,7 @@ public class ImageUtil  {
         if (ImageCache.imageLoaded(fileName)) {
             BufferedImage img = ImageCache.getImage(fileName);
 
-            if (withWidth < 0) {
+            if (withWidth >= 0) {
                 img = resizeImage(img, withWidth, withHeight);
             }
 

@@ -18,8 +18,12 @@ public abstract class BaseView extends JPanel {
     }
 
 
-    public void setBackground(Background bg) {
+    public void setBG(Background bg) {
         mBackground = bg;
+    }
+
+    public Background getBG() {
+        return mBackground;
     }
 
     public void drawBackground(Graphics g) {

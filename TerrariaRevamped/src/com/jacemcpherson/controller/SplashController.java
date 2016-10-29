@@ -15,18 +15,11 @@ public class SplashController extends BaseController {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            getModel().clearKeysPressed();
-        } else {
-            getModel().addKeyPressed(e.getKeyCode());
-        }
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        int xPos = e.getLocationOnScreen().x - getView().getLocationOnScreen().x;
-        int yPos = e.getLocationOnScreen().y - getView().getLocationOnScreen().y;
-        getModel().setDrawPosition(xPos, yPos);
         getModel().changeBackground();
     }
 

@@ -22,11 +22,9 @@ public class SplashView extends BaseView {
         ImageUtil.loadImage(R.image.bg_splash, (image, e) -> {
             if (e == null) {
                 setBG(new Background(image, false, true));
-                repaint();
                 mLoadingBackground = false;
             }
         });
-
     }
 
     @Override
@@ -34,18 +32,17 @@ public class SplashView extends BaseView {
         if (!mLoadingBackground) {
             drawBackground(g);
         }
-
         g.setFont(FontUtil.gameFont(32f));
-        g.setColor(Color.white);
+        g.setColor(Color.black);
         int textLength = FontUtil.getDrawWidth(g, "Loading...");
         g.drawString("Loading...", getWidth() / 2 - textLength / 2, getHeight() / 2);
     }
 
     public void changeToRobberBackground() {
+        mLoadingBackground = true;
         ImageUtil.loadImage(R.image.robber, (image, e) -> {
             if (e == null) {
                 setBG(new Background(image, true, false));
-                repaint();
                 mLoadingBackground = false;
             }
         });

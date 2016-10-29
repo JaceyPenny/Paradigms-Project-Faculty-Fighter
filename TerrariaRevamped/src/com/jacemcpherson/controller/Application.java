@@ -7,14 +7,13 @@ public class Application {
     private GameWindow mWindow;
 
     Application() throws Exception {
-        Runtime.getRuntime().addShutdownHook( new Thread( () -> {
-            Console.i("Closing");
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(
+                () -> Console.d("Closing")
+        ));
     }
 
     public void initWindow() {
         mWindow = new GameWindow(this);
-        mWindow.setVisible(true);
     }
 
     public GameWindow getGameWindow() {

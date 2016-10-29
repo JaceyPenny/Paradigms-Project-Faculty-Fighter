@@ -100,6 +100,11 @@ public class Console {
     }
 
     public static void exception(Exception e) {
-        e(e.getMessage());
+
+        e(e.getClass().getCanonicalName() + ": " + e.getMessage());
+
+        for (StackTraceElement el : e.getStackTrace()) {
+            e("\t" + el.toString());
+        }
     }
 }

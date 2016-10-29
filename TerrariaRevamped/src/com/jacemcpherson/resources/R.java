@@ -9,7 +9,8 @@ public class R {
     }
 
     public class asset {
-        public static final String fontfile = "asset/Gurindam.ttf";
+        public static final String font_gurindam = "asset/Gurindam.ttf";
+        public static final String font_airstrike = "asset/airstrike.ttf";
     }
 
 }

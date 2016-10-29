@@ -15,7 +15,7 @@ public class FontUtil {
         try {
             // load game font here
             GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            mFont = Font.createFont(Font.TRUETYPE_FONT, new File(R.asset.fontfile));
+            mFont = Font.createFont(Font.TRUETYPE_FONT, new File(R.asset.font_airstrike));
             graphicsEnvironment.registerFont(mFont);
         } catch (Exception e) {
             mFont = new Font("TimesRoman", Font.PLAIN, 16);

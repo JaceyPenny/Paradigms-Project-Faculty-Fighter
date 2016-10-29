@@ -5,7 +5,7 @@ public class R {
     public class image {
         public static final String bank = "image/bank.png";
         public static final String robber = "image/robber.jpg";
-        public static final String bg_splash = "image/bg_splash.jpg";
+        public static final String bg_splash = "image/bg_splash.png";
     }
 
     public class asset {

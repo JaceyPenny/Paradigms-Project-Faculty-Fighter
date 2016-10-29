@@ -35,8 +35,4 @@ public class FontUtil {
         return mFont.deriveFont(type).deriveFont(size);
     }
 
-    public static int getDrawWidth(Graphics g, String stringToMeasure) {
-        return g.getFontMetrics().stringWidth(stringToMeasure);
-    }
-
 }

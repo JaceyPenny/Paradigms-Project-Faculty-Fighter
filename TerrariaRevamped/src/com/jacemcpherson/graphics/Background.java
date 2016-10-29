@@ -9,35 +9,28 @@ import static com.jacemcpherson.graphics.Background.BackgroundType.*;
 
 
 public class Background {
-    enum BackgroundType {
-        IMAGE, IMAGE_SCALED, IMAGE_TESS, COLOR, EMPTY
+    public enum BackgroundType {
+        IMAGE, IMAGE_SCALED, IMAGE_CENTER_FIT, IMAGE_TESS, COLOR, EMPTY
     }
 
-    Color mDefaultBackgroundColor = Color.white;
-
+    boolean mWithBackgroundColor = false;
     BackgroundType mType = EMPTY;
     BufferedImage mImage;
     Color mColor;
 
-    public Background(BufferedImage image) {
-        this(image, false, false);
+    public Background(BufferedImage image, BackgroundType type) {
+        this(image, type, null);
     }
 
-    public Background(BufferedImage image, boolean tesselated, boolean scaled) {
-        this(image, tesselated, scaled, Color.white);
-    }
-
-    public Background(BufferedImage image, boolean tesselated, boolean scaled, Color defaultColor) {
-        mDefaultBackgroundColor = defaultColor;
+    public Background(BufferedImage image, BackgroundType type, Color backgroundColor) {
         mImage = image;
+        mType = type;
+        mColor = backgroundColor;
+        mWithBackgroundColor = backgroundColor != null;
+    }
 
-        if (tesselated) {
-            mType = IMAGE_TESS;
-        } else if (scaled) {
-            mType = IMAGE_SCALED;
-        } else {
-            mType = IMAGE;
-        }
+    public Background(BufferedImage image) {
+        this(image, IMAGE);
     }
 
     public Background(Color color) {
@@ -51,35 +44,68 @@ public class Background {
     }
 
     public void draw(Graphics g, BaseView onView) {
+        int width = 0;
+        int height = 0;
+        int x = 0;
+        int y = 0;
+
         switch (mType) {
             case COLOR:
                 g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
                 break;
             case IMAGE:
-                g.drawImage(mImage, 0, 0, mImage.getWidth(), mImage.getHeight(), new Color(0x00FFFFFF), null);
+                if (mWithBackgroundColor) {
+                    g.setColor(mColor);
+                    g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
+                }
+                g.drawImage(mImage, 0, 0, mImage.getWidth(), mImage.getHeight(), new Color(0x00000000), null);
                 break;
             case IMAGE_SCALED:
-                int newWidth = onView.getWidth();
-                int newHeight = Math.round(mImage.getHeight()  * ((float)newWidth / mImage.getWidth()));
+                width = onView.getWidth();
+                height = Math.round(mImage.getHeight()  * ((float)width / mImage.getWidth()));
 
-                if (newHeight < onView.getHeight()) {
-                    newHeight = onView.getHeight();
-                    newWidth = Math.round(mImage.getHeight() * ((float)newHeight / mImage.getHeight()));
+                if (height < onView.getHeight()) {
+                    height = onView.getHeight();
+                    width = Math.round(mImage.getHeight() * ((float)height / mImage.getHeight()));
                 }
 
-                g.drawImage(mImage, 0, 0, newWidth, newHeight, new Color(0x00FFFFFF), null);
+                g.drawImage(mImage, 0, 0, width, height, new Color(0x00FFFFFF), null);
                 break;
             case IMAGE_TESS:
                 int compWidth = onView.getWidth();
                 int compHeight = onView.getHeight();
-                int width = mImage.getWidth();
-                int height = mImage.getHeight();
+                width = mImage.getWidth();
+                height = mImage.getHeight();
 
-                for (int x = 0; x < compWidth; x += width) {
-                    for (int y = 0; y <= compHeight; y += height) {
-                        g.drawImage(mImage, x, y, width, height, mDefaultBackgroundColor, null);
+                for (x = 0; x < compWidth; x += width) {
+                    for (y = 0; y <= compHeight; y += height) {
+                        g.drawImage(mImage, x, y, width, height, mColor, null);
                     }
                 }
+                break;
+            case IMAGE_CENTER_FIT:
+                float imageRatio = (float) mImage.getWidth() / mImage.getHeight();
+                float canvasRatio = (float) onView.getWidth() / onView.getHeight();
+
+                if (imageRatio > canvasRatio) {
+                    width = onView.getWidth();
+                    height = Math.round(width / imageRatio);
+                    x = 0;
+                    y = onView.getHeight() / 2 - height / 2;
+                } else {
+                    height = onView.getHeight();
+                    width = Math.round(height * imageRatio);
+                    y = 0;
+                    x = onView.getWidth() / 2 - width / 2;
+                }
+
+                if (mWithBackgroundColor) {
+                    g.setColor(mColor);
+                    g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
+                }
+
+                g.drawImage(mImage, x, y, width, height, mColor, null);
+
                 break;
             default:
                 break;

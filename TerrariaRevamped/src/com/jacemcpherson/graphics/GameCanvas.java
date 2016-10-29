@@ -12,12 +12,12 @@ public class GameCanvas extends Canvas implements Runnable {
     private Timer mTimer;
     private BaseView mView;
 
-    public GameCanvas() {
+    public GameCanvas(int framesPerSecond) {
         super();
 
         setIgnoreRepaint(true);
 
-        mTimer = new Timer(15, (event) -> this.draw());
+        mTimer = new Timer((int) (1000f / framesPerSecond), (event) -> this.draw());
     }
 
     public void setView(BaseView view) {

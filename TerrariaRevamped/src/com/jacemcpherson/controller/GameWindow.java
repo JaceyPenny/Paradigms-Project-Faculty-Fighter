@@ -16,7 +16,7 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         setTitle("Terraria Paradigms");
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
-        mCanvas = new GameCanvas();
+        mCanvas = new GameCanvas(30); // kind of a noob fps, but damn this computer gets hot at 60, v bad optimization on my part
 
         BaseController splashController = new SplashController(application);
         mCanvas.setView(splashController.getView());

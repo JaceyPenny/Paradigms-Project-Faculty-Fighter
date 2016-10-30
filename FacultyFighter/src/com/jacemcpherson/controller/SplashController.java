@@ -20,7 +20,6 @@ public class SplashController extends BaseController {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        getModel().changeBackground();
     }
 
     @Override

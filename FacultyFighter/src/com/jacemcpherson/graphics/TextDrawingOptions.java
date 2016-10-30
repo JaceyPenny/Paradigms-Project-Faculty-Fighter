@@ -19,6 +19,7 @@ public class TextDrawingOptions {
     protected int paddingTop = 0;
     protected int paddingRight = 0;
     protected int paddingBottom = 0;
+    protected Point position = null;
 
     public static TextDrawingOptions build() {
         return new TextDrawingOptions();
@@ -52,5 +53,13 @@ public class TextDrawingOptions {
     public TextDrawingOptions paddingTop(int t) { paddingTop = t; return this; }
     public TextDrawingOptions paddingRight(int r) { paddingRight = r; return this; }
     public TextDrawingOptions paddingBottom(int b) { paddingBottom = b; return this; }
+    public TextDrawingOptions position(Point p) {
+        position = p;
+        return this;
+    }
+    public TextDrawingOptions position(int x, int y) {
+        position = new Point(x, y);
+        return this;
+    }
 
 }

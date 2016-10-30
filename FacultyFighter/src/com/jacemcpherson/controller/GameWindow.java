@@ -14,7 +14,12 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
 
     public GameWindow(Application application) {
         setTitle("Terraria Paradigms");
-        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        setSize(720, 540);
+
+        // TODO: Comment this line out
+        setDebugLocation();
+
+        setResizable(false);
 
         mCanvas = new GameCanvas(30); // kind of a noob fps, but damn this computer gets hot at 60, v bad optimization on my part
 
@@ -32,6 +37,12 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
 
         Thread thread = new Thread(mCanvas);
         thread.start();
+    }
+
+    public void setDebugLocation() {
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
+        setLocation(graphicsDevices[0].getDefaultConfiguration().getBounds().x, getY());
     }
 
     public GameCanvas getCanvas() {

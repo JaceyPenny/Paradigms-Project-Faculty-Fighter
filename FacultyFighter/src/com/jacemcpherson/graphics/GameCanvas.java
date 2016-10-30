@@ -11,9 +11,11 @@ public class GameCanvas extends Canvas implements Runnable {
     private boolean mDraw = true;
     private Timer mTimer;
     private BaseView mView;
+    private int mFPS;
 
     public GameCanvas(int framesPerSecond) {
         super();
+        mFPS = framesPerSecond;
 
         setIgnoreRepaint(true);
 
@@ -28,6 +30,10 @@ public class GameCanvas extends Canvas implements Runnable {
         return mView;
     }
 
+    public int getFPS() {
+        return mFPS;
+    }
+
     @Override
     public void run() {
         mTimer.start();
@@ -37,6 +43,8 @@ public class GameCanvas extends Canvas implements Runnable {
             }
         }
     }
+
+
 
     public synchronized void draw() {
         BufferStrategy strategy = getBufferStrategy();
@@ -50,6 +58,7 @@ public class GameCanvas extends Canvas implements Runnable {
         if (mView != null)
             mView.paint(g);
 
+        g.dispose();
         strategy.show();
     }
 

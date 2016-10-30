@@ -9,10 +9,6 @@ public class SplashModel extends BaseModel {
         setView(new SplashView(application));
     }
 
-    public void changeBackground() {
-        getView().changeToRobberBackground();
-    }
-
     @Override
     public SplashView getView() {
         return (SplashView) super.getView();

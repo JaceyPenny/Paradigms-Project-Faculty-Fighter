@@ -22,8 +22,4 @@ public class SplashController extends BaseController {
     public void mousePressed(MouseEvent e) {
     }
 
-    @Override
-    public SplashModel getModel() {
-        return (SplashModel) super.getModel();
-    }
 }

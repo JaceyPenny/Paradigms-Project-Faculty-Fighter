@@ -17,11 +17,11 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         setSize(720, 540);
 
         // TODO: Comment this line out
-        setDebugLocation();
+        setDebugWindowLocation();
 
         setResizable(false);
 
-        mCanvas = new GameCanvas(30); // kind of a noob fps, but damn this computer gets hot at 60, v bad optimization on my part
+        mCanvas = new GameCanvas(60); // kind of a noob fps, but damn this computer gets hot at 60, v bad optimization on my part
 
         BaseController splashController = new SplashController(application);
         mCanvas.setView(splashController.getView());
@@ -39,7 +39,7 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         thread.start();
     }
 
-    public void setDebugLocation() {
+    public void setDebugWindowLocation() {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
         setLocation(graphicsDevices[0].getDefaultConfiguration().getBounds().x, getY());

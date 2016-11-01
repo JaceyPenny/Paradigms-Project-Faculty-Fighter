@@ -2,7 +2,6 @@ package com.jacemcpherson.view;
 
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
-import com.jacemcpherson.graphics.Background.BackgroundType;
 import com.jacemcpherson.graphics.Draw;
 import com.jacemcpherson.graphics.ShapeDrawingOptions;
 import com.jacemcpherson.graphics.TextDrawingOptions;
@@ -16,7 +15,6 @@ public class SplashView extends BaseView {
 
     private boolean mLoadingBackground = false;
 
-
     public SplashView(Application application) {
         super(application);
         setBG(new Background(Color.red));
@@ -24,7 +22,7 @@ public class SplashView extends BaseView {
 
         ImageUtil.loadImage(R.image.bg_splash, (image, e) -> {
             if (e == null) {
-                setBG(new Background(image, BackgroundType.IMAGE_CENTER_FIT, Color.black));
+                setBG(new Background(image, Background.BackgroundType.IMAGE_CENTER_FIT, Color.black));
                 mLoadingBackground = false;
             }
         });
@@ -38,15 +36,17 @@ public class SplashView extends BaseView {
             drawBackground(g);
         }
 
-        if (getMousePosition() != null)
+        Point mousePosition = getMousePosition();
+        if (mousePosition != null)
             Draw.drawShape(g, ShapeDrawingOptions.build()
-                    .position(getMousePosition())
+                    .position(mousePosition)
                     .stroke(Color.red)
                     .fill(Color.white)
                     .drawLocation(ShapeDrawingOptions.DrawLocation.CENTERED)
                     .shape(ShapeDrawingOptions.Shape.CIRCLE)
                     .radius(20f)
             );
+
 
         drawLoadingText(g);
         Draw.drawText(
@@ -58,6 +58,7 @@ public class SplashView extends BaseView {
                         .verticalPosition(TextDrawingOptions.VerticalTextPosition.BOTTOM)
                         .padding(24)
         );
+
     }
 
     public void drawLoadingText(Graphics g) {

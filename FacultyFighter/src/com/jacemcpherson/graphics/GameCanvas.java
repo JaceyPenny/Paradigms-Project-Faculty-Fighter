@@ -4,9 +4,11 @@ import com.jacemcpherson.view.BaseView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 
-public class GameCanvas extends Canvas implements Runnable {
+public class GameCanvas extends Canvas implements Runnable, ActionListener {
 
     private boolean mDraw = true;
     private Timer mTimer;
@@ -19,7 +21,12 @@ public class GameCanvas extends Canvas implements Runnable {
 
         setIgnoreRepaint(true);
 
-        mTimer = new Timer((int) (1000f / framesPerSecond), (event) -> this.draw());
+        mTimer = new Timer((int) (1000f / framesPerSecond), this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        draw();
     }
 
     public void setView(BaseView view) {
@@ -37,6 +44,7 @@ public class GameCanvas extends Canvas implements Runnable {
     @Override
     public void run() {
         mTimer.start();
+
         while (true) {
             if (!mDraw) {
                 mTimer.stop();
@@ -45,21 +53,23 @@ public class GameCanvas extends Canvas implements Runnable {
     }
 
 
-
     public synchronized void draw() {
+
         BufferStrategy strategy = getBufferStrategy();
         if (strategy == null) {
             createBufferStrategy(2);
-            requestFocus();
             return;
         }
+
         Graphics g = strategy.getDrawGraphics();
 
         if (mView != null)
             mView.paint(g);
 
-        g.dispose();
+        //g.dispose();
+
         strategy.show();
+        Toolkit.getDefaultToolkit().sync();
     }
 
     public void stopDrawing() {

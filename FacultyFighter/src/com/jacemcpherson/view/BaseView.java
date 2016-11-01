@@ -46,7 +46,19 @@ public abstract class BaseView {
     }
 
     public Point getMousePosition() {
-        return getCanvas().getMousePosition();
+//        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+//        if (pointerInfo != null) {
+//            Point mousePosition = MouseInfo.getPointerInfo().getLocation();
+//            return mousePosition;
+//        } else {
+//            return null;
+//        }
+        try {
+            Point mousePoint = getCanvas().getMousePosition();
+            return mousePoint;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void drawBackground(Graphics g) {

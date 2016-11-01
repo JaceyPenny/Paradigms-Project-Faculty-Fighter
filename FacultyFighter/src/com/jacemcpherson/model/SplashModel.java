@@ -13,5 +13,4 @@ public class SplashModel extends BaseModel {
     public SplashView getView() {
         return (SplashView) super.getView();
     }
-
 }

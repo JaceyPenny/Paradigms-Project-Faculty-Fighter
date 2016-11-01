@@ -1,8 +1,13 @@
 package com.jacemcpherson.model;
 
+import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.view.BaseView;
 
 public abstract class BaseModel {
+
+    public BaseModel(Application application) {
+
+    }
 
     protected BaseView mView;
 

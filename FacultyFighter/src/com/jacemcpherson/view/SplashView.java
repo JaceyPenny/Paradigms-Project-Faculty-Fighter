@@ -3,7 +3,6 @@ package com.jacemcpherson.view;
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.graphics.Draw;
-import com.jacemcpherson.graphics.ShapeDrawingOptions;
 import com.jacemcpherson.graphics.TextDrawingOptions;
 import com.jacemcpherson.resources.R;
 import com.jacemcpherson.util.FontUtil;
@@ -36,6 +35,7 @@ public class SplashView extends BaseView {
             drawBackground(g);
         }
 
+        /*
         Point mousePosition = getMousePosition();
         if (mousePosition != null)
             Draw.drawShape(g, ShapeDrawingOptions.build()
@@ -46,9 +46,10 @@ public class SplashView extends BaseView {
                     .shape(ShapeDrawingOptions.Shape.CIRCLE)
                     .radius(20f)
             );
-
+        */
 
         drawLoadingText(g);
+
         Draw.drawText(
                 g, "Created by Jace McPherson", this,
                 TextDrawingOptions.build()

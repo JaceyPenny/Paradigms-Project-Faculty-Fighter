@@ -6,6 +6,7 @@ import com.jacemcpherson.view.SplashView;
 public class SplashModel extends BaseModel {
 
     public SplashModel(Application application) {
+        super(application);
         setView(new SplashView(application));
     }
 

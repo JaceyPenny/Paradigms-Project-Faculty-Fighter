@@ -1,5 +1,6 @@
 package com.jacemcpherson.graphics;
 
+import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.view.BaseView;
 
 import javax.swing.*;
@@ -13,15 +14,16 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
     private boolean mDraw = true;
     private Timer mTimer;
     private BaseView mView;
+    private ViewAnimation mViewAnimation = null;
     private int mFPS;
 
-    public GameCanvas(int framesPerSecond) {
+    public GameCanvas() {
         super();
-        mFPS = framesPerSecond;
+        mFPS = ViewAnimation.GLOBAL_FPS;
 
         setIgnoreRepaint(true);
 
-        mTimer = new Timer((int) (1000f / framesPerSecond), this);
+        mTimer = new Timer((int) (1000f / ViewAnimation.GLOBAL_FPS), this);
     }
 
     @Override
@@ -52,7 +54,6 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
         }
     }
 
-
     public synchronized void draw() {
 
         BufferStrategy strategy = getBufferStrategy();
@@ -63,13 +64,32 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
 
         Graphics g = strategy.getDrawGraphics();
 
-        if (mView != null)
-            mView.paint(g);
+        if (mViewAnimation != null && mViewAnimation.isCompleted()) {
+            mViewAnimation = null;
+        }
 
-        //g.dispose();
+        paintView(g);
+        g.dispose();
 
         strategy.show();
-        Toolkit.getDefaultToolkit().sync();
+    }
+
+    public void paintView(Graphics g) {
+        if (isAnimating()) {
+            mViewAnimation.drawAnimation(g, getSize());
+        } else {
+            if (mView != null) {
+                mView.paint(g);
+            }
+        }
+    }
+
+    public void animate(ViewAnimation viewAnimation) {
+        mViewAnimation = viewAnimation;
+    }
+
+    public boolean isAnimating() {
+        return mViewAnimation != null && !mViewAnimation.isCompleted();
     }
 
     public void stopDrawing() {

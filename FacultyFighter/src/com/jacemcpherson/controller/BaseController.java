@@ -1,5 +1,6 @@
 package com.jacemcpherson.controller;
 
+import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.model.BaseModel;
 import com.jacemcpherson.view.BaseView;
 
@@ -38,5 +39,13 @@ public abstract class BaseController {
 
     public <T extends BaseView> T getView() {
         return mModel.getView();
+    }
+
+    public void moveToController(BaseController controller) {
+        mApplication.getGameWindow().moveToController(controller);
+    }
+
+    public void moveToController(BaseController controller, ViewAnimation viewAnimation) {
+        mApplication.getGameWindow().moveToController(controller, viewAnimation);
     }
 }

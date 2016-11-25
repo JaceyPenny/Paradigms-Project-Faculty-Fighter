@@ -1,6 +1,7 @@
 package com.jacemcpherson.model;
 
 import com.jacemcpherson.controller.Application;
+import com.jacemcpherson.task.Scheduler;
 import com.jacemcpherson.view.SplashView;
 
 public class SplashModel extends BaseModel {
@@ -8,6 +9,10 @@ public class SplashModel extends BaseModel {
     public SplashModel(Application application) {
         super(application);
         setView(new SplashView(application));
+
+        Scheduler.schedule( () -> {
+
+        });
     }
 
     @Override

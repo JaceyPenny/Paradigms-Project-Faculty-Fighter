@@ -21,10 +21,6 @@ public class TextDrawingOptions {
     protected int paddingBottom = 0;
     protected Point position = null;
 
-    public static TextDrawingOptions build() {
-        return new TextDrawingOptions();
-    }
-
     public TextDrawingOptions horizontalPosition(HorizontalTextPosition position) {
         this.horizontalTextPosition = position;
         return this;

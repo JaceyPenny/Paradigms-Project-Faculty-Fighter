@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ImageUtil  {
+public class ImageUtil {
 
     private static class ImageLoader implements Runnable {
 
@@ -17,8 +17,12 @@ public class ImageUtil  {
         private int mWidth = -1;
         private int mHeight = -1;
 
-        ImageLoader(String fileName, ImageLoaderCallback callback) {
+        ImageLoader(String fileName) {
             mFileName = fileName;
+        }
+
+        ImageLoader(String fileName, ImageLoaderCallback callback) {
+            this(fileName);
             mCallback = callback;
         }
 
@@ -38,9 +42,11 @@ public class ImageUtil  {
                     img = ImageUtil.resizeImage(img, mWidth, mHeight);
                 }
 
-                mCallback.imageLoaded(img, null);
+                if (mCallback != null)
+                    mCallback.imageLoaded(img, null);
             } catch (IOException e) {
-                mCallback.imageLoaded(null, e);
+                if (mCallback != null)
+                    mCallback.imageLoaded(null, e);
             }
         }
     }
@@ -83,11 +89,22 @@ public class ImageUtil  {
                 img = resizeImage(img, withWidth, withHeight);
             }
 
-            callback.imageLoaded(img, null);
+            if (callback != null)
+                callback.imageLoaded(img, null);
 
         } else {
             Thread thread = new Thread(new ImageLoader(fileName, callback, withWidth, withHeight));
             thread.start();
+        }
+    }
+
+    public static BufferedImage loadImageSynchronous(String fileName) {
+        if (ImageCache.imageLoaded(fileName)) {
+            return ImageCache.getImage(fileName);
+        } else {
+            ImageLoader loader = new ImageLoader(fileName, null);
+            loader.run();
+            return null;
         }
     }
 

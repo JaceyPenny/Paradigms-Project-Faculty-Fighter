@@ -52,7 +52,7 @@ public class SplashView extends BaseView {
 
         Draw.drawText(
                 g, "Created by Jace McPherson", this,
-                TextDrawingOptions.build()
+                new TextDrawingOptions()
                         .font(FontUtil.gameFont(18))
                         .color(Color.gray)
                         .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
@@ -83,7 +83,7 @@ public class SplashView extends BaseView {
 
         Draw.drawText(
                 g, output, this,
-                TextDrawingOptions.build()
+                new TextDrawingOptions()
                         .color(Color.white)
                         .font(FontUtil.gameFont(32))
                         .position(getWidth() - Draw.getTextDrawWidth(g, "Loading...", FontUtil.gameFont(32)) - 32, getHeight() - 32)

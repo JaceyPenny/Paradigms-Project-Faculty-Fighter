@@ -25,10 +25,6 @@ public class ShapeDrawingOptions {
     protected Point position = null;
     protected DrawLocation drawLocation = CENTERED;
 
-    public static ShapeDrawingOptions build() {
-        return new ShapeDrawingOptions();
-    }
-
     public ShapeDrawingOptions shape(Shape shape, Object... args) {
         this.shape = shape;
         if (shape == Shape.POLYGON) {

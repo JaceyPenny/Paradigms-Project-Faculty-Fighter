@@ -3,14 +3,18 @@ package com.jacemcpherson.view;
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.graphics.GameCanvas;
+import com.jacemcpherson.widget.BaseWidget;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public abstract class BaseView {
 
     Application mApplication;
 
     private Background mBackground;
+
+    private ArrayList<BaseWidget> mWidgets = new ArrayList<>();
 
     private int mWidth;
     private int mFrameNumber;
@@ -31,10 +35,10 @@ public abstract class BaseView {
     }
 
     public int getWidth() {
-        return mApplication.getGameWindow().getCanvas().getWidth();
+        return getCanvas().getWidth();
     }
     public int getHeight() {
-        return mApplication.getGameWindow().getCanvas().getHeight();
+        return getCanvas().getHeight();
     }
 
     public int getFrame() {
@@ -43,22 +47,31 @@ public abstract class BaseView {
 
     public void paint(Graphics g) {
         mFrameNumber++;
+        for (BaseWidget w : mWidgets) {
+            w.draw(g);
+        }
     }
 
     public Point getMousePosition() {
-//        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-//        if (pointerInfo != null) {
-//            Point mousePosition = MouseInfo.getPointerInfo().getLocation();
-//            return mousePosition;
-//        } else {
-//            return null;
-//        }
         try {
             Point mousePoint = getCanvas().getMousePosition();
             return mousePoint;
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public synchronized void addWidget(BaseWidget widget) {
+        for (int i = 0; i < mWidgets.size(); i++) {
+            if (mWidgets.get(i).getZPosition() > widget.getZPosition()) {
+                mWidgets.add(i, widget);
+                break;
+            }
+        }
+    }
+
+    public synchronized void removeWidget(BaseWidget widget) {
+        mWidgets.remove(widget);
     }
 
     public void drawBackground(Graphics g) {

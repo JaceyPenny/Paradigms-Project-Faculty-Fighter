@@ -1,5 +1,6 @@
 package com.jacemcpherson.graphics;
 
+import com.jacemcpherson.util.Console;
 import com.jacemcpherson.view.BaseView;
 
 import java.awt.*;
@@ -61,7 +62,11 @@ public class Draw {
     }
 
     private static Point getShapeDrawPosition(ShapeDrawingOptions options) {
-        Point location = options.position;
+        Point location = (options.position != null) ? options.position : new Point();
+
+        if (options == null) {
+            Console.d("Something is fucking null");
+        }
 
         switch (options.drawLocation) {
             case CENTERED:

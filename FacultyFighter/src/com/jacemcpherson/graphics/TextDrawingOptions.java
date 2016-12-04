@@ -19,6 +19,10 @@ public class TextDrawingOptions {
     protected int paddingTop = 0;
     protected int paddingRight = 0;
     protected int paddingBottom = 0;
+    protected int shiftLeft = 0;
+    protected int shiftRight = 0;
+    protected int shiftUp = 0;
+    protected int shiftDown = 0;
     protected Point position = null;
 
     public TextDrawingOptions horizontalPosition(HorizontalTextPosition position) {
@@ -51,6 +55,29 @@ public class TextDrawingOptions {
     public TextDrawingOptions paddingBottom(int b) { paddingBottom = b; return this; }
     public TextDrawingOptions position(Point p) {
         position = p;
+        return this;
+    }
+    public TextDrawingOptions shift(int l, int u, int r, int d) {
+        shiftLeft = l;
+        shiftRight = r;
+        shiftUp = u;
+        shiftDown = d;
+        return this;
+    }
+    public TextDrawingOptions shiftLeft(int l) {
+        shiftLeft = l;
+        return this;
+    }
+    public TextDrawingOptions shiftRight(int r) {
+        shiftRight = r;
+        return this;
+    }
+    public TextDrawingOptions shiftUp(int u) {
+        shiftUp = u;
+        return this;
+    }
+    public TextDrawingOptions shiftDown(int d) {
+        shiftDown = d;
         return this;
     }
     public TextDrawingOptions position(int x, int y) {

@@ -1,9 +1,9 @@
 package com.jacemcpherson.graphics;
 
-import com.jacemcpherson.util.Console;
-import com.jacemcpherson.view.BaseView;
+import com.jacemcpherson.util.MathUtil;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Draw {
 
@@ -16,12 +16,12 @@ public class Draw {
 
                 if (options.filled) {
                     g.setColor(options.fillColor);
-                    g.fillOval(drawPoint.x, drawPoint.y, (int)options.width, (int)options.height);
+                    g.fillOval(drawPoint.x, drawPoint.y, (int) options.width, (int) options.height);
                 }
 
                 if (options.stroked) {
                     g.setColor(options.strokeColor);
-                    g.drawOval(drawPoint.x, drawPoint.y, (int)options.width, (int)options.height);
+                    g.drawOval(drawPoint.x, drawPoint.y, (int) options.width, (int) options.height);
                 }
 
                 break;
@@ -30,12 +30,12 @@ public class Draw {
 
                 if (options.filled) {
                     g.setColor(options.fillColor);
-                    g.fillRect(drawPoint.x, drawPoint.y, (int)options.width, (int)options.height);
+                    g.fillRect(drawPoint.x, drawPoint.y, (int) options.width, (int) options.height);
                 }
 
                 if (options.stroked) {
                     g.setColor(options.strokeColor);
-                    g.fillRect(drawPoint.x, drawPoint.y, (int)options.width, (int)options.height);
+                    g.fillRect(drawPoint.x, drawPoint.y, (int) options.width, (int) options.height);
                 }
 
                 break;
@@ -53,7 +53,7 @@ public class Draw {
         }
     }
 
-    public static void drawText(Graphics g, String text, BaseView view, TextDrawingOptions options) {
+    public static void drawText(Graphics g, String text, Sizeable view, TextDrawingOptions options) {
         g.setFont(options.font);
         Point position = (options.position != null) ? options.position : getTextDrawPosition(g, text, view, options);
 
@@ -63,10 +63,6 @@ public class Draw {
 
     private static Point getShapeDrawPosition(ShapeDrawingOptions options) {
         Point location = (options.position != null) ? options.position : new Point();
-
-        if (options == null) {
-            Console.d("Something is fucking null");
-        }
 
         switch (options.drawLocation) {
             case CENTERED:
@@ -91,7 +87,7 @@ public class Draw {
         return location;
     }
 
-    private static Point getTextDrawPosition(Graphics g, String text, BaseView view, TextDrawingOptions options) {
+    private static Point getTextDrawPosition(Graphics g, String text, Sizeable view, TextDrawingOptions options) {
         int x = 0, y = 0;
 
         int textSize;
@@ -113,7 +109,7 @@ public class Draw {
 
         switch (options.verticalTextPosition) {
             case CENTER:
-                y = view.getHeight() / 2 + options.font.getSize() / 2;
+                y = view.getHeight() / 2 + options.font.getSize() / 3;
                 break;
             case TOP:
                 y = options.font.getSize() + options.paddingTop;
@@ -123,7 +119,10 @@ public class Draw {
                 break;
         }
 
-        return new Point(x, y);
+        int horiShift = -1 * options.shiftLeft + options.shiftRight;
+        int vertShift = -1 * options.shiftUp + options.shiftDown;
+
+        return new Point(x + horiShift, y + vertShift);
     }
 
     public static int getTextDrawWidth(Graphics g, String stringToMeasure, Font font) {
@@ -135,4 +134,58 @@ public class Draw {
     }
 
 
+    public static void drawImage(Graphics g, BufferedImage image, int x, int y) {
+        drawImage(g, image, x, y, image.getWidth(), image.getHeight());
+    }
+
+    public static void drawImage(Graphics g, BufferedImage image, int x, int y, int width, int height) {
+        g.drawImage(image, x, y, width, height, new Color(0, 0, 0, 0), null);
+    }
+
+    public static void drawImage(Graphics g, BufferedImage image, Sizeable view, ImageDrawingOptions options) {
+        int width = options.width;
+        int height = options.height;
+
+        Dimension d = MathUtil.getScaled(image, width, height);
+
+        width = (int)d.getWidth();
+        height = (int)d.getHeight();
+
+        if (options.position != null) {
+            drawImage(g, image, options.position.x, options.position.y, width, height);
+            return;
+        }
+
+        int x = 0;
+        int y = 0;
+
+        switch (options.veritcalImagePosition) {
+            case TOP:
+                y = options.paddingTop;
+                break;
+            case CENTER:
+                y = view.getHeight() / 2 - height / 2;
+                break;
+            case BOTTOM:
+                y = view.getHeight() - height - options.paddingBottom;
+                break;
+        }
+
+        switch (options.horizontalImagePosition) {
+            case LEFT:
+                x = options.paddingLeft;
+                break;
+            case CENTER:
+                x = view.getWidth() / 2 - width / 2;
+                break;
+            case RIGHT:
+                x = view.getWidth() - width - options.paddingRight;
+                break;
+        }
+
+        int vertShift = -1 * options.shiftLeft + options.shiftRight;
+        int horiShift = -1 * options.shiftUp + options.shiftDown;
+
+        drawImage(g, image, x + horiShift, y + vertShift, width, height);
+    }
 }

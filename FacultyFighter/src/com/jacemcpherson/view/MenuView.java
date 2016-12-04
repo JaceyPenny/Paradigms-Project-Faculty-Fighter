@@ -1,34 +1,43 @@
 package com.jacemcpherson.view;
 
 import com.jacemcpherson.controller.Application;
-import com.jacemcpherson.graphics.Draw;
-import com.jacemcpherson.graphics.ShapeDrawingOptions;
-import com.jacemcpherson.graphics.TextDrawingOptions;
+import com.jacemcpherson.model.BaseModel;
+import com.jacemcpherson.util.Console;
+import com.jacemcpherson.widget.MenuButton;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MenuView extends BaseView {
 
-    public MenuView(Application application) {
-        super(application);
+    ArrayList<MenuButton> menuButtons = new ArrayList<>();
 
-
+    public MenuView(Application application, BaseModel model) {
+        super(application, model);
+        setBackground(Color.black);
     }
 
     @Override
     public void paint(Graphics g) {
-        Draw.drawText(g, "Testing", this, new TextDrawingOptions().color(Color.white));
+        super.paint(g);
+    }
 
-        Draw.drawShape(g,
-                new ShapeDrawingOptions()
-                .drawLocation(ShapeDrawingOptions.DrawLocation.CENTERED)
-                .stroke(Color.white)
-                .fill(Color.cyan)
-                .height(100)
-                .width(200)
-                .shape(ShapeDrawingOptions.Shape.CIRCLE)
-                .position(getWidth() / 2, getHeight() / 2)
+    public void addMenuButton(MenuButton button) {
+        addWidget(button);
+        menuButtons.add(button);
+    }
 
-        );
+    public void updateViews() {
+        Console.d("Update views called");
+
+        if (menuButtons.size() == 0) {
+            return;
+        }
+
+        Point position = menuButtons.get(0).getPosition();
+        for (int i = 1; i < menuButtons.size(); i++) {
+            position.y += 72;
+            menuButtons.get(i).setPosition(position.x, position.y);
+        }
     }
 }

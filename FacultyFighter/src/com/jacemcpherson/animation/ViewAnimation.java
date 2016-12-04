@@ -14,7 +14,7 @@ public abstract class ViewAnimation {
     protected BaseView mInView;
     protected BaseView mOutView;
 
-    public static class InvalidAnimationException extends Exception {
+    public static class InvalidAnimationException extends RuntimeException {
         public InvalidAnimationException(String message) {
             super(message);
         }

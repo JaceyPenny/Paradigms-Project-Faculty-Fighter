@@ -3,6 +3,7 @@ package com.jacemcpherson.controller;
 import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.model.BaseModel;
 import com.jacemcpherson.view.BaseView;
+import com.jacemcpherson.widget.BaseWidget;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -42,10 +43,40 @@ public abstract class BaseController {
     }
 
     public void moveToController(BaseController controller) {
-        mApplication.getGameWindow().moveToController(controller);
+        getWindow().moveToController(controller);
     }
 
     public void moveToController(BaseController controller, ViewAnimation viewAnimation) {
-        mApplication.getGameWindow().moveToController(controller, viewAnimation);
+        getWindow().moveToController(controller, viewAnimation);
+    }
+
+    public void popController() {
+        getWindow().popController();
+    }
+
+    public void popController(ViewAnimation animation) {
+        getWindow().popController(animation);
+    }
+
+    public GameWindow getWindow() {
+        return mApplication.getGameWindow();
+    }
+
+    public BaseController getPreviousController() {
+        return getWindow().getControllerBefore(this);
+    }
+
+    public void addWidget(BaseWidget widget) {
+        getView().addWidget(widget);
+    }
+
+    public void update() {}
+
+    public void onPause() {
+        getView().unloadWidgets();
+    }
+
+    public void onResume() {
+        getView().reloadWidgets();
     }
 }

@@ -1,10 +1,13 @@
 package com.jacemcpherson.util;
 
+import com.jacemcpherson.resources.R;
 import com.jacemcpherson.resources.Resources;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ImageUtil {
@@ -34,9 +37,18 @@ public class ImageUtil {
 
         @Override
         public void run() {
+            if (ImageCache.isLoaded(mFileName)) {
+                BufferedImage img = ImageCache.getImage(mFileName);
+                if (mWidth > 0 || mHeight > 0) {
+                    img = ImageUtil.resizeImage(img, mWidth, mHeight);
+                }
+                mCallback.imageLoaded(img, null);
+                return;
+            }
+
             try {
                 BufferedImage img = Resources.getImage(mFileName);
-                ImageCache.putImage(mFileName, img); // we only want to cache the image straight from the file
+                ImageCache.putImage(mFileName, img); // we only want to cache the image straight from the file, not resized
 
                 if (mWidth > 0 && mHeight > 0) {
                     img = ImageUtil.resizeImage(img, mWidth, mHeight);
@@ -52,13 +64,13 @@ public class ImageUtil {
     }
 
     public interface ImageLoaderCallback {
-        public void imageLoaded(BufferedImage image, Exception e);
+        void imageLoaded(BufferedImage image, Exception e);
     }
 
     private static class ImageCache {
         private static final HashMap<String, BufferedImage> mCache = new HashMap<>();
 
-        static boolean imageLoaded(String imageName) {
+        static boolean isLoaded(String imageName) {
             return mCache.containsKey(imageName);
         }
 
@@ -78,14 +90,11 @@ public class ImageUtil {
     }
 
     public static void loadImage(String fileName, int withWidth, int withHeight, ImageLoaderCallback callback) throws IllegalArgumentException {
-        if ((withWidth < 0 && withHeight >= 0) || (withWidth >= 0 && withHeight < 0)) {
-            throw new IllegalArgumentException("You must provide either two positive or two negative integers for width and height.");
-        }
 
-        if (ImageCache.imageLoaded(fileName)) {
+        if (ImageCache.isLoaded(fileName)) {
             BufferedImage img = ImageCache.getImage(fileName);
 
-            if (withWidth >= 0) {
+            if (withWidth > 0 || withHeight > 0) {
                 img = resizeImage(img, withWidth, withHeight);
             }
 
@@ -99,16 +108,38 @@ public class ImageUtil {
     }
 
     public static BufferedImage loadImageSynchronous(String fileName) {
-        if (ImageCache.imageLoaded(fileName)) {
-            return ImageCache.getImage(fileName);
+        return loadImageSynchronous(fileName, -1, -1);
+    }
+
+    public static BufferedImage loadImageSynchronous(String fileName, int withWidth, int withHeight) {
+        if (ImageCache.isLoaded(fileName)) {
+            BufferedImage image = ImageCache.getImage(fileName);
+            if (withWidth > 0 || withHeight > 0) {
+                image = resizeImage(image, withWidth, withHeight);
+            }
+            return image;
         } else {
-            ImageLoader loader = new ImageLoader(fileName, null);
-            loader.run();
-            return null;
+            try {
+                BufferedImage image = Resources.getImage(fileName);
+                ImageCache.putImage(fileName, image);
+
+                if (withWidth > 0 || withHeight > 0) {
+                    image = resizeImage(image, withWidth, withHeight);
+                }
+
+                return image;
+            } catch (IOException e) {
+                return null;
+            }
         }
     }
 
     private static BufferedImage resizeImage(BufferedImage image, int width, int height) {
+        Dimension result = MathUtil.getScaled(image, width, height);
+
+        width = (int)result.getWidth();
+        height = (int)result.getHeight();
+
         Image tmp = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -117,6 +148,38 @@ public class ImageUtil {
         g2d.dispose();
 
         return dimg;
+    }
+
+    public static void clearToTransparent(BufferedImage mBufferedImage) {
+        Graphics2D graphics = (Graphics2D) mBufferedImage.getGraphics();
+        graphics.setBackground(new Color(255, 255, 255, 0));
+        graphics.clearRect(0, 0, mBufferedImage.getWidth(), mBufferedImage.getHeight());
+    }
+
+    public static void preloadAllImagesInBackground(ImageLoaderCallback callback) {
+        Class<R.image> thing = R.image.class;
+        Field[] fields = thing.getFields();
+
+        Thread backgroundThread = new Thread(() -> {
+            ArrayList<String> results = new ArrayList<>();
+
+            for (Field field : fields) {
+                try {
+                    String result = (String) field.get(null);
+                    results.add(result);
+                } catch (Exception e) {
+
+                }
+            }
+
+            for (String image : results) {
+                new ImageLoader(image, callback).run();
+            }
+
+            callback.imageLoaded(null, null);
+        });
+
+        backgroundThread.start();
     }
 
 }

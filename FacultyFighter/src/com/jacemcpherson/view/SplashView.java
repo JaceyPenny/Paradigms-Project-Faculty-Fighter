@@ -4,6 +4,7 @@ import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.graphics.Draw;
 import com.jacemcpherson.graphics.TextDrawingOptions;
+import com.jacemcpherson.model.BaseModel;
 import com.jacemcpherson.resources.R;
 import com.jacemcpherson.util.FontUtil;
 import com.jacemcpherson.util.ImageUtil;
@@ -14,14 +15,14 @@ public class SplashView extends BaseView {
 
     private boolean mLoadingBackground = false;
 
-    public SplashView(Application application) {
-        super(application);
-        setBG(new Background(Color.red));
+    public SplashView(Application application, BaseModel model) {
+        super(application, model);
+        setBackground(new Background(Color.red));
         mLoadingBackground = true;
 
         ImageUtil.loadImage(R.image.bg_splash, (image, e) -> {
             if (e == null) {
-                setBG(new Background(image, Background.BackgroundType.IMAGE_CENTER_FIT, Color.black));
+                setBackground(new Background(image, Background.BackgroundType.IMAGE_CENTER_FIT, Color.black));
                 mLoadingBackground = false;
             }
         });
@@ -35,31 +36,8 @@ public class SplashView extends BaseView {
             drawBackground(g);
         }
 
-        /*
-        Point mousePosition = getMousePosition();
-        if (mousePosition != null)
-            Draw.drawShape(g, ShapeDrawingOptions.build()
-                    .position(mousePosition)
-                    .stroke(Color.red)
-                    .fill(Color.white)
-                    .drawLocation(ShapeDrawingOptions.DrawLocation.CENTERED)
-                    .shape(ShapeDrawingOptions.Shape.CIRCLE)
-                    .radius(20f)
-            );
-        */
-
         drawLoadingText(g);
-
-        Draw.drawText(
-                g, "Created by Jace McPherson", this,
-                new TextDrawingOptions()
-                        .font(FontUtil.gameFont(18))
-                        .color(Color.gray)
-                        .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
-                        .verticalPosition(TextDrawingOptions.VerticalTextPosition.BOTTOM)
-                        .padding(24)
-        );
-
+        drawCreditText(g);
     }
 
     public void drawLoadingText(Graphics g) {
@@ -87,6 +65,17 @@ public class SplashView extends BaseView {
                         .color(Color.white)
                         .font(FontUtil.gameFont(32))
                         .position(getWidth() - Draw.getTextDrawWidth(g, "Loading...", FontUtil.gameFont(32)) - 32, getHeight() - 32)
+        );
+    }
+    public void drawCreditText(Graphics g) {
+        Draw.drawText(
+                g, R.string.credit_text, this,
+                new TextDrawingOptions()
+                        .font(FontUtil.gameFont(18))
+                        .color(Color.gray)
+                        .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
+                        .verticalPosition(TextDrawingOptions.VerticalTextPosition.BOTTOM)
+                        .padding(24)
         );
     }
 }

@@ -19,16 +19,6 @@ public class Console {
         System.out.print("Terraria Paradigms v0.1alpha\n> ");
     }
 
-//    public static void out(LogType type, String message) {
-//        System.out.printf(
-//                "%s | %s: %s\n> ",
-//                mFormatter.format(new Date()),
-//                type.toString(),
-//                message
-//        );
-//
-//    }
-
     public static void out(LogType type, String message, Object... args) {
         System.out.printf(
                 "%s | %s: %s\n> ",

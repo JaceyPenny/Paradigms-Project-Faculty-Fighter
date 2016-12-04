@@ -40,7 +40,7 @@ public class FadeViewAnimation extends ViewAnimation {
             return this;
         }
 
-        public FadeViewAnimation build() throws InvalidAnimationException {
+        public FadeViewAnimation build() {
             if (outView == null || inView == null) {
                 throw new InvalidAnimationException("You must set two non-null views for in and out animations.");
             }

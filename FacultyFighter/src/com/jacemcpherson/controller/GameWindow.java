@@ -16,19 +16,27 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     Stack<BaseController> mControllers = new Stack<>();
     GameCanvas mCanvas;
 
+    Dimension[] windowSizes = new Dimension[] {
+            new Dimension(640, 480),
+            new Dimension(720, 540),
+            new Dimension(1280, 720)
+    };
+
+    int mWindowSize = 0;
+
     public GameWindow(Application application) {
         setTitle("Terraria Paradigms");
-        setSize(720, 540);
+        setSize(windowSizes[mWindowSize]);
 
         // TODO: Comment this line out
-        setDebugWindowLocation();
+        //setDebugWindowLocation();
 
         setResizable(false);
 
         mCanvas = new GameCanvas();
 
         BaseController splashController = new SplashController(application);
-        mCanvas.setView(splashController.getView());
+        mCanvas.setController(splashController);
         add(mCanvas, BorderLayout.CENTER);
 
         mControllers.push(splashController);
@@ -55,8 +63,9 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     }
 
     public void moveToController(BaseController controller) {
+        mControllers.peek().onPause();
         mControllers.push(controller);
-        mCanvas.setView(controller.getView());
+        mCanvas.setController(controller);
     }
 
     public void moveToController(BaseController controller, ViewAnimation viewAnimation) {
@@ -68,9 +77,29 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         if (mControllers.size() == 1)
             throw new LastControllerException("You cannot pop the only visible controller.");
         else {
-            mControllers.pop();
-            mCanvas.setView(mControllers.peek().getView());
+            BaseController controller = mControllers.pop();
+            controller.onPause();
+            mCanvas.setController(mControllers.peek());
+            mControllers.peek().onResume();
         }
+    }
+
+    public void popController(ViewAnimation animation) throws LastControllerException {
+        popController();
+        mCanvas.animate(animation);
+    }
+
+    public void resizeWindow(int size) {
+        mWindowSize = size;
+        setSize(windowSizes[mWindowSize]);
+        if (mControllers.size() > 0) {
+            mCanvas.draw();
+            mControllers.peek().onResume();
+        }
+    }
+
+    public int getWindowSize() {
+        return mWindowSize;
     }
 
     @Override
@@ -95,7 +124,6 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     @Override
     public void mousePressed(MouseEvent e) {
         mControllers.peek().mousePressed(e);
-        Console.d("Mouse pressed, caught in GameWindow");
     }
 
     @Override
@@ -146,5 +174,16 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public BaseController getControllerBefore(BaseController controller) {
+        BaseController prev = null;
+        for (BaseController c : mControllers) {
+            if (c == controller) {
+                return prev;
+            }
+            prev = c;
+        }
+        return null;
     }
 }

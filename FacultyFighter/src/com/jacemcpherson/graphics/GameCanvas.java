@@ -1,6 +1,7 @@
 package com.jacemcpherson.graphics;
 
 import com.jacemcpherson.animation.ViewAnimation;
+import com.jacemcpherson.controller.BaseController;
 import com.jacemcpherson.view.BaseView;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
 
     private boolean mDraw = true;
     private Timer mTimer;
-    private BaseView mView;
+    private BaseController mController;
     private ViewAnimation mViewAnimation = null;
     private int mFPS;
 
@@ -31,12 +32,13 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
         draw();
     }
 
-    public void setView(BaseView view) {
-        mView = view;
+    public void setController(BaseController controller) {
+        mController = controller;
     }
 
     public BaseView getView() {
-        return mView;
+        if (mController == null) return null;
+        return mController.getView();
     }
 
     public int getFPS() {
@@ -55,6 +57,10 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
     }
 
     public synchronized void draw() {
+
+        if (mController != null) {
+            mController.update();
+        }
 
         BufferStrategy strategy = getBufferStrategy();
         if (strategy == null) {
@@ -78,8 +84,8 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
         if (isAnimating()) {
             mViewAnimation.drawAnimation(g, getSize());
         } else {
-            if (mView != null) {
-                mView.paint(g);
+            if (getView() != null) {
+                getView().paint(g);
             }
         }
     }

@@ -17,7 +17,6 @@ public class SplashView extends BaseView {
 
     public SplashView(Application application, BaseModel model) {
         super(application, model);
-        setBackground(new Background(Color.red));
         mLoadingBackground = true;
 
         ImageUtil.loadImage(R.image.bg_splash, (image, e) -> {

@@ -25,7 +25,6 @@ public class CharacterView extends BaseView {
 
     public CharacterView(Application application, BaseModel model) {
         super(application, model);
-        setBackground(Color.black);
 
         mTeacherSprite = new Sprite(null);
 

@@ -20,8 +20,17 @@ public class SplashController extends BaseController {
     @Override
     public void update() {
         if (getView().getFrame() > MathUtil.secondsToFrames(0.5) && mImagesLoaded) {
-            moveToMenu();
+            if (getGameState().isInGame()) {
+                moveToMenuWithoutAnimation();
+            } else {
+                moveToMenu();
+            }
         }
+    }
+
+    public void moveToMenuWithoutAnimation() {
+        MenuController controller = new MenuController(getApplication());
+        moveToController(controller);
     }
 
     public void moveToMenu() {

@@ -1,5 +1,6 @@
 package com.jacemcpherson.controller;
 
+import com.jacemcpherson.animation.FadeViewAnimation;
 import com.jacemcpherson.animation.TranslateViewAnimation;
 import com.jacemcpherson.model.MenuModel;
 import com.jacemcpherson.resources.R;
@@ -60,7 +61,7 @@ public class MenuController extends BaseController {
             moveToController(
                     controller,
                     new TranslateViewAnimation.Builder()
-                            .durationSeconds(1)
+                            .durationMillis(500)
                             .inDirection(TranslateViewAnimation.Direction.RIGHT)
                             .outDirection(TranslateViewAnimation.Direction.LEFT)
                             .inView(controller.getView())
@@ -74,10 +75,25 @@ public class MenuController extends BaseController {
 
         MenuButton instructionsButton = new MenuButton(getView());
         instructionsButton.setText("Instructions");
-        instructionsButton.setOnClickListener(widget -> Console.d("Instructions clicked"));
+        instructionsButton.setOnClickListener(widget -> {
+            InstructionsController controller = new InstructionsController(getApplication());
+            moveToController(controller, new TranslateViewAnimation.Builder()
+                    .durationMillis(500)
+                    .inView(controller.getView())
+                    .outView(getView())
+                    .inDirection(TranslateViewAnimation.Direction.RIGHT)
+                    .outDirection(TranslateViewAnimation.Direction.LEFT)
+                    .build()
+            );
+        });
         instructionsButton.setPosition(optionsButton.getPosition().x, optionsButton.getPosition().y + 72);
 
         getView().addMenuButton(instructionsButton);
+    }
+
+    private void moveToGame() {
+        GameController gameController = new GameController(getApplication());
+        moveToController(gameController, new FadeViewAnimation.Builder().durationMillis(500).inView(gameController.getView()).outView(getView()).build());
     }
 
     @Override
@@ -89,5 +105,8 @@ public class MenuController extends BaseController {
     public void onResume() {
         super.onResume();
         getView().updateViews();
+        if (getGameState().isInGame()) {
+            moveToGame();
+        }
     }
 }

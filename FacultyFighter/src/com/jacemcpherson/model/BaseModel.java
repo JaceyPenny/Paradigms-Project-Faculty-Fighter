@@ -2,6 +2,7 @@ package com.jacemcpherson.model;
 
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.controller.BaseController;
+import com.jacemcpherson.resources.GameState;
 import com.jacemcpherson.view.BaseView;
 
 public abstract class BaseModel {
@@ -18,6 +19,10 @@ public abstract class BaseModel {
 
     public Application getApplication() {
         return mApplication;
+    }
+
+    public GameState getGameState() {
+        return mApplication.getGameState();
     }
 
     public <T extends BaseView> void setView(T view) {

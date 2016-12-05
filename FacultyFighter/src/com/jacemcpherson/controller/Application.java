@@ -1,6 +1,8 @@
 package com.jacemcpherson.controller;
 
+import com.jacemcpherson.resources.GameState;
 import com.jacemcpherson.util.Console;
+import com.jacemcpherson.util.FileUtil;
 
 public class Application {
 
@@ -12,7 +14,11 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new Thread(
                 () -> Console.d("Closing")
         ));
-        mGameState.loadGameState();
+        mGameState = FileUtil.loadGameState();
+    }
+
+    public void saveGameState() {
+        FileUtil.saveGameState(mGameState);
     }
 
     public void initWindow() {

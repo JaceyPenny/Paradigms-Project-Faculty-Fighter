@@ -29,6 +29,7 @@ public abstract class BaseView implements Sizeable {
     public BaseView(Application application, BaseModel model) {
         mApplication = application;
         mModel = model;
+        setBackground(Color.black);
     }
 
     public Application getApplication() {

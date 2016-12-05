@@ -215,6 +215,8 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (!isClickable()) return;
+
         boolean inButton = getBounds().contains(e.getPoint());
 
         MouseState oldState = mMouseState;
@@ -228,6 +230,8 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (!isClickable()) return;
+
         boolean inButton = getBounds().contains(e.getPoint());
 
         MouseState oldState = mMouseState;
@@ -254,6 +258,8 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (!isClickable()) return;
+
         boolean inButton = getBounds().contains(e.getPoint());
 
         MouseState oldState = mMouseState;
@@ -265,6 +271,7 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
     }
 
     public void mouseReleased(MouseEvent e) {
+        if (!isClickable()) return;
 
         boolean inButton = getBounds().contains(e.getPoint());
 

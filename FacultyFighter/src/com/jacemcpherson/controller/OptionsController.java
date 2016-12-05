@@ -5,62 +5,64 @@ import com.jacemcpherson.model.OptionsModel;
 import com.jacemcpherson.view.OptionsView;
 import com.jacemcpherson.widget.MenuButton;
 
+import static com.jacemcpherson.resources.GameState.*;
+
 public class OptionsController extends BaseController {
 
     public OptionsController(Application application) {
         super(application);
         setModel(new OptionsModel(application, this));
 
-        MenuButton button480 = new MenuButton(getView(), 200, 64);
-        MenuButton button540 = new MenuButton(getView(), 200, 64);
-        MenuButton button720 = new MenuButton(getView(), 200, 64);
+        MenuButton buttonEasy = new MenuButton(getView(), 200, 64);
+        MenuButton buttonMedi = new MenuButton(getView(), 200, 64);
+        MenuButton buttonHard = new MenuButton(getView(), 200, 64);
 
-        button480.setText("640x480");
-        button540.setText("720x540");
-        button720.setText("1280x720");
+        buttonEasy.setText("Easy");
+        buttonMedi.setText("Medium");
+        buttonHard.setText("Hard");
 
-        button480.setOnClickListener(w -> {
-            button480.setChecked(true);
-            button540.setChecked(false);
-            button720.setChecked(false);
-            getWindow().resizeWindow(0);
+        buttonEasy.setOnClickListener(w -> {
+            buttonEasy.setChecked(true);
+            buttonMedi.setChecked(false);
+            buttonHard.setChecked(false);
+            getGameState().setDifficulty(DIFFICULTY_EASY);
         });
 
 
-        button540.setOnClickListener(w -> {
-            button480.setChecked(false);
-            button540.setChecked(true);
-            button720.setChecked(false);
-            getWindow().resizeWindow(1);
+        buttonMedi.setOnClickListener(w -> {
+            buttonEasy.setChecked(false);
+            buttonMedi.setChecked(true);
+            buttonHard.setChecked(false);
+            getGameState().setDifficulty(DIFFICULTY_MEDI);
         });
 
 
-        button720.setOnClickListener(w -> {
-            button480.setChecked(false);
-            button540.setChecked(false);
-            button720.setChecked(true);
-            getWindow().resizeWindow(2);
+        buttonHard.setOnClickListener(w -> {
+            buttonEasy.setChecked(false);
+            buttonMedi.setChecked(false);
+            buttonHard.setChecked(true);
+            getGameState().setDifficulty(DIFFICULTY_HARD);
         });
 
-        switch (getWindow().getWindowSize()) {
-            case 0:
-                button480.setChecked(true);
+        switch (getGameState().getDifficulty()) {
+            case DIFFICULTY_EASY:
+                buttonEasy.setChecked(true);
                 break;
-            case 1:
-                button540.setChecked(true);
+            case DIFFICULTY_MEDI:
+                buttonMedi.setChecked(true);
                 break;
-            case 2:
-                button720.setChecked(true);
+            case DIFFICULTY_HARD:
+                buttonHard.setChecked(true);
                 break;
             default:
                 break;
         }
 
-        MenuButton goBack = new MenuButton(getView(), 200, 64);
+        MenuButton goBack = new MenuButton(getView());
         goBack.setOnClickListener(w ->
                 popController(
                         new TranslateViewAnimation.Builder()
-                                .durationSeconds(1)
+                                .durationMillis(500)
                                 .outView(getView())
                                 .inView(getPreviousController().getView())
                                 .outDirection(TranslateViewAnimation.Direction.RIGHT)
@@ -69,11 +71,11 @@ public class OptionsController extends BaseController {
                 )
         );
 
-        goBack.setText("Cancel");
+        goBack.setText("Done");
 
-        getView().addSizeButton(button480);
-        getView().addSizeButton(button540);
-        getView().addSizeButton(button720);
+        getView().addSizeButton(buttonEasy);
+        getView().addSizeButton(buttonMedi);
+        getView().addSizeButton(buttonHard);
         getView().addSizeButton(goBack);
 
         getView().repositionButtons();

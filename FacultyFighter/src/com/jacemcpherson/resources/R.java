@@ -13,6 +13,7 @@ public class R {
         public static final String menu_button_open_checked = "image/menu_button_open_checked.png";
         public static final String menu_button_hovered_checked = "image/menu_button_hovered_checked.png";
         public static final String menu_button_pressed_checked = "image/menu_button_pressed_checked.png";
+        public static final String menu_button_locked = "image/menu_button_locked.png";
 
         public static final String arrow_left = "image/arrow_left.png";
         public static final String arrow_right = "image/arrow_right.png";
@@ -48,6 +49,7 @@ public class R {
     public class asset {
         public static final String font_gurindam = "asset/Gurindam.ttf";
         public static final String font_airstrike = "asset/airstrike.ttf";
+        public static final String game_state = "asset/game_state.dat";
     }
 
     public class string {

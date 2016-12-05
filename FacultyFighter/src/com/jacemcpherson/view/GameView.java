@@ -22,6 +22,7 @@ public class GameView extends BaseView {
 
     boolean gameWon = false;
     boolean gamePaused = false;
+    boolean gameSaved = false;
     String winningText = "Winner: ";
 
     public GameView(Application application, BaseModel model) {
@@ -46,12 +47,17 @@ public class GameView extends BaseView {
         mEnemyHealth = enemy.getHealth() / 100f;
     }
 
-    public void setGameWon(Player winner) {
+    public void setGameWon(String winningText) {
         gameWon = true;
-        winningText = "Winner: " + winner.getName();
+        this.winningText = winningText;
+    }
+
+    public void setSaved() {
+        gameSaved = true;
     }
 
     public void togglePause() {
+        gameSaved = false;
         gamePaused = !gamePaused;
     }
 
@@ -107,6 +113,8 @@ public class GameView extends BaseView {
                         .font(FontUtil.gameFont(36f))
         );
 
+
+
         if (gamePaused) {
             g.setColor(new Color(0, 0, 0, 180));
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -116,6 +124,33 @@ public class GameView extends BaseView {
                             .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
                             .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
                             .font(FontUtil.gameFont(48f))
+            );
+
+            Draw.drawText(g, gameSaved ? "Saved!" : "Press 'S' to save game", this,
+                    new TextDrawingOptions()
+                            .color(Color.white)
+                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
+                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
+                            .shiftDown(36)
+                            .font(FontUtil.gameFont(24f))
+            );
+
+            Draw.drawText(g, "Press 'I' for instructions", this,
+                    new TextDrawingOptions()
+                            .color(Color.white)
+                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
+                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
+                            .shiftDown(56)
+                            .font(FontUtil.gameFont(24f))
+            );
+        } else {
+            Draw.drawText(g, "Press ESC to pause", this,
+                    new TextDrawingOptions()
+                            .color(Color.lightGray)
+                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
+                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.TOP)
+                            .padding(10, 70, 0, 0)
+                            .font(FontUtil.gameFont(18f))
             );
         }
 
@@ -129,12 +164,25 @@ public class GameView extends BaseView {
                             .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
                             .font(FontUtil.gameFont(48f))
             );
-            Draw.drawText(g, "Press ESC to return home", this,
+
+            int won = getModel().getGameState().getGamesWon();
+            int lost = getModel().getGameState().getGamesLost();
+
+            Draw.drawText(g, "You've won " + won + " games and lost " + lost, this,
                     new TextDrawingOptions()
                             .color(Color.white)
                             .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
                             .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
                             .shiftDown(30)
+                            .font(FontUtil.gameFont(24f))
+            );
+
+            Draw.drawText(g, "Press ESC to return home", this,
+                    new TextDrawingOptions()
+                            .color(Color.lightGray)
+                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
+                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
+                            .shiftDown(60)
                             .font(FontUtil.gameFont(24f))
             );
         }

@@ -18,6 +18,10 @@ public class MathUtil {
         return (int) ((double)durationMs / (1000.0 / ViewAnimation.GLOBAL_FPS));
     }
 
+    public static int framesToMillis(int frames) {
+        return (int) (1000.0 / (double)frames * frames);
+    }
+
     public static int secondsToFrames(int seconds) {
         return seconds * ViewAnimation.GLOBAL_FPS;
     }

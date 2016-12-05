@@ -1,11 +1,9 @@
 package com.jacemcpherson.view;
 
 import com.jacemcpherson.controller.Application;
-import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.graphics.Draw;
 import com.jacemcpherson.graphics.TextDrawingOptions;
 import com.jacemcpherson.model.OptionsModel;
-import com.jacemcpherson.util.Console;
 import com.jacemcpherson.util.FontUtil;
 import com.jacemcpherson.widget.MenuButton;
 
@@ -18,7 +16,6 @@ public class OptionsView extends BaseView {
 
     public OptionsView(Application application, OptionsModel model) {
         super(application, model);
-        setBackground(new Background(Color.black));
     }
 
     public void addSizeButton(MenuButton button) {
@@ -31,21 +28,23 @@ public class OptionsView extends BaseView {
             return;
         }
 
-        Console.d("Window size: " + getApplication().getGameWindow().getWindowSize());
-        Console.d("Window width: " + getCanvas().getWidth());
-        int xPosition = getWidth() / 2 - mSizeButtons.get(0).getWidth() / 2;
+        int xPosition;
         int yPosition = 50;
 
         for (MenuButton button : mSizeButtons) {
+            xPosition = getWidth() / 2 - button.getWidth() / 2;
             button.setPosition(xPosition, yPosition);
             yPosition += 72;
         }
+
+        Point position = mSizeButtons.get(3).getPosition();
+        mSizeButtons.get(3).setPosition(position.x, position.y + 100);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Draw.drawText(g, "Window size:", this,
+        Draw.drawText(g, "Game difficulty:", this,
                 new TextDrawingOptions()
                 .verticalPosition(TextDrawingOptions.VerticalTextPosition.TOP)
                 .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)

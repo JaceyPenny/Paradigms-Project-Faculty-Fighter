@@ -65,6 +65,7 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         mControllers.peek().onPause();
         mControllers.push(controller);
         mCanvas.setController(controller);
+        controller.onResume();
     }
 
     public void moveToController(BaseController controller, ViewAnimation viewAnimation) {

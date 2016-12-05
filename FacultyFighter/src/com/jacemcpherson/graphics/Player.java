@@ -2,6 +2,7 @@ package com.jacemcpherson.graphics;
 
 import com.jacemcpherson.resources.R;
 import com.jacemcpherson.resources.Resources;
+import com.jacemcpherson.util.Console;
 import com.jacemcpherson.util.ImageUtil;
 import com.jacemcpherson.util.MathUtil;
 
@@ -98,7 +99,7 @@ public class Player extends Sprite {
     }
 
     public void removeKeyPressed(int keyCode) {
-        mKeysPressed.remove((Integer)keyCode);
+        mKeysPressed.remove((Integer) keyCode);
     }
 
     public void clearKeys() {
@@ -190,11 +191,19 @@ public class Player extends Sprite {
 
     public void takeHit(Player player) {
 
+        if (isBlocking()) {
+            return;
+        }
+
         Rectangle myHitbox = getHitbox();
         Rectangle theirPunchbox = player.getPunchbox();
         if (myHitbox.intersects(theirPunchbox)) {
             mHealth -= 10;
         }
+    }
+
+    public void setHealth(int health) {
+        mHealth = health;
     }
 
     public int getHealth() {
@@ -209,6 +218,16 @@ public class Player extends Sprite {
         return getCurrentAnimation() == ANIMATION_WALK1 || getCurrentAnimation() == ANIMATION_WALK2;
     }
 
+    public boolean isBlocking() {
+        return getCurrentAnimation() == ANIMATION_BLOCK;
+    }
+
+    public void setDirection(PlayerDirection direction) {
+        if (direction != mDirection) {
+            flipPlayer();
+        }
+    }
+
     protected void flipPlayer() {
         mDirection = (mDirection == LEFT) ? RIGHT : LEFT;
 
@@ -219,12 +238,43 @@ public class Player extends Sprite {
 
     }
 
+    public boolean isFarLeft() {
+        return getPosition().x <= 0;
+    }
+
+    public boolean isFarRight() {
+        if (getPosition().x >= 640-getWidth())
+            Console.d("True");
+        return getPosition().x >= 640-getWidth();
+    }
+
     private void shiftPlayer(PlayerDirection direction) {
         if (mDirection != direction) {
             flipPlayer();
         }
         Point position = getPosition();
         int shift = (direction == LEFT) ? -1 * VELOCITY : VELOCITY;
-        setPosition(position.x + shift, position.y);
+
+        int newX = position.x + shift;
+        if (newX < 0) {
+            newX = 0;
+        }
+
+        if (newX > 640-getWidth()) {
+            newX = 640-getWidth();
+        }
+
+        setPosition(newX, position.y);
+    }
+
+    public String serialize() {
+        Point position = getPosition();
+        return String.format(
+                "%d;%d;%d;%d",
+                position.x,
+                position.y,
+                (mDirection == LEFT) ? 0 : 1,
+                mHealth
+        );
     }
 }

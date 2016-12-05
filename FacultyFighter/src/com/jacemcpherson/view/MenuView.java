@@ -2,7 +2,6 @@ package com.jacemcpherson.view;
 
 import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.model.BaseModel;
-import com.jacemcpherson.util.Console;
 import com.jacemcpherson.widget.MenuButton;
 
 import java.awt.*;
@@ -14,7 +13,6 @@ public class MenuView extends BaseView {
 
     public MenuView(Application application, BaseModel model) {
         super(application, model);
-        setBackground(Color.black);
     }
 
     @Override
@@ -28,8 +26,6 @@ public class MenuView extends BaseView {
     }
 
     public void updateViews() {
-        Console.d("Update views called");
-
         if (menuButtons.size() == 0) {
             return;
         }

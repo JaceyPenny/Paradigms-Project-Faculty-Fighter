@@ -4,8 +4,8 @@ import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.controller.BaseController;
 import com.jacemcpherson.graphics.Enemy;
 import com.jacemcpherson.graphics.Player;
-import com.jacemcpherson.resources.Pair;
 import com.jacemcpherson.resources.Resources;
+import com.jacemcpherson.task.EnemyAI;
 import com.jacemcpherson.view.GameView;
 
 public class GameModel extends BaseModel {
@@ -16,18 +16,27 @@ public class GameModel extends BaseModel {
     boolean gameOver = false;
     boolean gamePaused = false;
 
+    EnemyAI enemyAI;
+
     public GameModel(Application application, BaseController controller) {
         super(application, controller);
         setView(new GameView(application, this));
 
-        mPlayer = new Player(-1, 180);
-        mPlayer.setPosition(0, 220);
+        // we are loading from a file
+        if (getGameState().isInGame()) {
+            mPlayer = getGameState().getPlayer();
+            mEnemy = getGameState().getEnemy();
+            togglePause();
+        } else {
+            mPlayer = new Player(-1, 180);
+            mPlayer.setPosition(0, 220);
 
+            mEnemy = new Enemy(-1, 180, Resources.getFacultyFiles().get(getGameState().getEnemySelection()));
+            mEnemy.setPosition(480, 220);
 
-        Pair<String, String> enemyInfo = Resources.getFacultyFiles().get(getApplication().getGameState().getEnemySelection());
-
-        mEnemy = new Enemy(-1, 180, enemyInfo);
-        mEnemy.setPosition(480, 220);
+            getGameState().setPlayer(mPlayer);
+            getGameState().setEnemy(mEnemy);
+        }
 
         mPlayer.setPunchCallback(fromPlayer -> {
             mEnemy.takeHit(fromPlayer);
@@ -45,6 +54,13 @@ public class GameModel extends BaseModel {
 
         getView().addSprite(mPlayer);
         getView().addSprite(mEnemy);
+
+        enemyAI = new EnemyAI(mPlayer, mEnemy, getGameState().getDifficulty());
+        enemyAI.setPaused(isGamePaused());
+        Thread thread = new Thread(enemyAI);
+        thread.start();
+
+        getGameState().setInGame(true);
     }
 
     public void togglePause() {
@@ -52,16 +68,40 @@ public class GameModel extends BaseModel {
         if (gamePaused) {
             mPlayer.clearKeys();
             mEnemy.clearKeys();
+            if (enemyAI != null)
+                enemyAI.setPaused(true);
+        } else {
+            if (enemyAI != null)
+                enemyAI.setPaused(false);
         }
         getView().togglePause();
     }
 
     public void endGame(Player winner) {
+        enemyAI.stop();
         mPlayer.clearKeys();
         mEnemy.clearKeys();
         gameOver = true;
 
-        getView().setGameWon(winner);
+        String winningText;
+
+        if (winner == mPlayer) {
+            getGameState().incrementGamesWon();
+            winningText = "You win!";
+        } else {
+            getGameState().incrementGamesLost();
+            winningText = winner.getName() + " wins";
+        }
+
+        getView().setGameWon(winningText);
+
+
+        getGameState().setInGame(false);
+    }
+
+    public void saveState() {
+        getApplication().saveGameState();
+        getView().setSaved();
     }
 
     public void addKeyPressed(int keyCode) {

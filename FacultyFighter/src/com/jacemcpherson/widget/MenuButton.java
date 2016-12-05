@@ -18,6 +18,8 @@ public class MenuButton extends BaseWidget {
     private final Background OPEN_CHECKED_BG = new Background(ImageUtil.loadImageSynchronous(R.image.menu_button_open_checked), Background.BackgroundType.IMAGE_CENTER_FIT);
     private final Background HOVERED_CHECKED_BG = new Background(ImageUtil.loadImageSynchronous(R.image.menu_button_hovered_checked), Background.BackgroundType.IMAGE_CENTER_FIT);
     private final Background PRESSED_CHECKED_BG = new Background(ImageUtil.loadImageSynchronous(R.image.menu_button_pressed_checked), Background.BackgroundType.IMAGE_CENTER_FIT);
+    private final Background LOCKED_BG = new Background(ImageUtil.loadImageSynchronous(R.image.menu_button_locked), Background.BackgroundType.IMAGE_CENTER_FIT);
+
 
     String mText = "";
 
@@ -49,6 +51,12 @@ public class MenuButton extends BaseWidget {
         drawWidget();
     }
 
+    @Override
+    public void setClickable(boolean clickable) {
+        super.setClickable(clickable);
+        updateBackground();
+    }
+
     public String getText() {
         return mText;
     }
@@ -76,7 +84,13 @@ public class MenuButton extends BaseWidget {
         updateBackground();
     }
 
+    @Override
     public void updateBackground() {
+        if (!isClickable()) {
+            setBackground(LOCKED_BG);
+            return;
+        }
+
         switch (getMouseState()) {
             case OPEN:
                 setBackground((mChecked) ? OPEN_CHECKED_BG : OPEN_BG);

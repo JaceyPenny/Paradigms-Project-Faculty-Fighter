@@ -34,7 +34,19 @@ public class MenuController extends BaseController {
 
         MenuButton startButton = new MenuButton(getView());
         startButton.setText("Start Game");
-        startButton.setOnClickListener(widget -> Console.d("Start clicked"));
+        startButton.setOnClickListener(widget -> {
+            CharacterController controller = new CharacterController(getApplication());
+            moveToController(
+                    controller,
+                    new TranslateViewAnimation.Builder()
+                            .durationMillis(500)
+                            .inDirection(TranslateViewAnimation.Direction.RIGHT)
+                            .outDirection(TranslateViewAnimation.Direction.LEFT)
+                            .inView(controller.getView())
+                            .outView(getView())
+                            .build()
+            );
+        });
         startButton.setHorizontalGravity(BaseWidget.HorizontalGravity.CENTER);
         startButton.setVerticalGravity(BaseWidget.VerticalGravity.CENTER);
 
@@ -53,7 +65,7 @@ public class MenuController extends BaseController {
                             .outDirection(TranslateViewAnimation.Direction.LEFT)
                             .inView(controller.getView())
                             .outView(getView())
-                    .build()
+                            .build()
             );
         });
         optionsButton.setPosition(startButton.getPosition().x, startButton.getPosition().y + 72);

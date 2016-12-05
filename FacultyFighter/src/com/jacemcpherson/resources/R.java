@@ -11,6 +11,14 @@ public class R {
         public static final String menu_button_hovered_checked = "image/menu_button_hovered_checked.png";
         public static final String menu_button_pressed_checked = "image/menu_button_pressed_checked.png";
 
+        public static final String arrow_left = "image/arrow_left.png";
+        public static final String arrow_right = "image/arrow_right.png";
+
+        public static final String player_still = "image/player/player_still.png";
+        public static final String player_punch = "image/player/player_punch.png";
+        public static final String player_walk1 = "image/player/player_walk1.png";
+        public static final String player_walk2 = "image/player/player_walk2.png";
+
         public static final String faculty_panda = "image/faculty/bpanda.png";
         public static final String faculty_cbobda = "image/faculty/cbobda.png";
         public static final String faculty_dandrews = "image/faculty/dandrews.png";

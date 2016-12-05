@@ -2,6 +2,7 @@ package com.jacemcpherson.util;
 
 import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.graphics.Sizeable;
+import com.jacemcpherson.widget.BaseWidget;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -53,5 +54,32 @@ public class MathUtil {
         }
 
         return new Dimension(width, height);
+    }
+
+    public static Point getPositionInView(Sizeable view, int width, int height, BaseWidget.HorizontalGravity horizontal, BaseWidget.VerticalGravity vertical) {
+        int x = 0, y = 0;
+        switch (horizontal) {
+            case LEFT:
+                x = 0;
+                break;
+            case CENTER:
+                x = view.getWidth() / 2 - width / 2;
+                break;
+            case RIGHT:
+                x = view.getWidth() - width;
+        }
+
+        switch (vertical) {
+            case TOP:
+                y = 0;
+                break;
+            case CENTER:
+                y = view.getHeight() / 2 - height / 2;
+                break;
+            case BOTTOM:
+                y = view.getHeight() - height;
+        }
+
+        return new Point(x, y);
     }
 }

@@ -4,6 +4,7 @@ import com.jacemcpherson.controller.Application;
 import com.jacemcpherson.graphics.Background;
 import com.jacemcpherson.graphics.GameCanvas;
 import com.jacemcpherson.graphics.Sizeable;
+import com.jacemcpherson.graphics.Sprite;
 import com.jacemcpherson.model.BaseModel;
 import com.jacemcpherson.widget.BaseWidget;
 
@@ -21,9 +22,11 @@ public abstract class BaseView implements Sizeable {
 
     private ArrayList<BaseWidget> mWidgets = new ArrayList<>();
 
+    private ArrayList<Sprite> mSprites = new ArrayList<>();
+
     private int mFrameNumber;
 
-    BaseView(Application application, BaseModel model) {
+    public BaseView(Application application, BaseModel model) {
         mApplication = application;
         mModel = model;
     }
@@ -59,6 +62,10 @@ public abstract class BaseView implements Sizeable {
         return mFrameNumber;
     }
 
+    public <T extends BaseModel> T getModel() {
+        return (T)mModel;
+    }
+
     public void paint(Graphics g) {
         mFrameNumber++;
         if (mBackground != null) {
@@ -66,6 +73,9 @@ public abstract class BaseView implements Sizeable {
         }
         for (BaseWidget w : mWidgets) {
             w.paint(g);
+        }
+        for (Sprite s : mSprites) {
+            s.paint(g);
         }
     }
 
@@ -94,6 +104,14 @@ public abstract class BaseView implements Sizeable {
         if (!added) {
             mWidgets.add(widget);
         }
+    }
+
+    public synchronized void addSprite(Sprite sprite) {
+        mSprites.add(sprite);
+    }
+
+    public synchronized void removeSprite(Sprite sprite) {
+        mSprites.remove(sprite);
     }
 
     public synchronized void unloadWidgets() {

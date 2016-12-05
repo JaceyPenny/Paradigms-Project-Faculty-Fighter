@@ -6,10 +6,13 @@ public class Application {
 
     private GameWindow mWindow;
 
+    private GameState mGameState = new GameState();
+
     Application() throws Exception {
         Runtime.getRuntime().addShutdownHook(new Thread(
                 () -> Console.d("Closing")
         ));
+        mGameState.loadGameState();
     }
 
     public void initWindow() {
@@ -20,6 +23,9 @@ public class Application {
         return mWindow;
     }
 
+    public GameState getGameState() {
+        return mGameState;
+    }
 
     /** MAIN METHOD */
     public static void main(String[] args) {

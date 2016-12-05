@@ -16,6 +16,10 @@ public abstract class BaseModel {
 
     protected BaseView mView;
 
+    public Application getApplication() {
+        return mApplication;
+    }
+
     public <T extends BaseView> void setView(T view) {
         mView = view;
     }

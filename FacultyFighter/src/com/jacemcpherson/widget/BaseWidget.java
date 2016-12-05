@@ -13,7 +13,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 public abstract class BaseWidget implements MouseMotionListener, MouseListener, Sizeable {
-    public static final OnClickListener EMPTY_LISTENER = widget -> {};
+    public static final OnClickListener EMPTY_LISTENER = widget -> {
+    };
 
     public enum MouseState {
         OPEN, HOVERED, PRESSED
@@ -91,7 +92,7 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
         return mBufferedImage.getWidth();
     }
 
-    private void setWidth(int width) {
+    public void setWidth(int width) {
         mBufferedImage = new BufferedImage(width, mBufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         drawWidget();
     }
@@ -100,7 +101,7 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
         return mBufferedImage.getHeight();
     }
 
-    private void setHeight(int height) {
+    public void setHeight(int height) {
         mBufferedImage = new BufferedImage(mBufferedImage.getWidth(), height, BufferedImage.TYPE_INT_ARGB);
         drawWidget();
     }
@@ -120,24 +121,26 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
             if (mVerticalGravity != null) {
                 switch (mVerticalGravity) {
                     case TOP:
+                        y = mPaddingTop;
                         break;
                     case CENTER:
                         y = mParentView.getHeight() / 2 - getHeight() / 2;
                         break;
                     case BOTTOM:
-                        y = mParentView.getHeight() - getHeight();
+                        y = mParentView.getHeight() - getHeight() - mPaddingBottom;
                 }
             }
 
             if (mHorizontalGravity != null) {
                 switch (mHorizontalGravity) {
                     case LEFT:
+                        x = mPaddingLeft;
                         break;
                     case CENTER:
-                        x = mParentView.getHeight() / 2 - getHeight() / 2;
+                        x = mParentView.getWidth() / 2 - getWidth() / 2;
                         break;
                     case RIGHT:
-                        x = mParentView.getHeight() - getHeight();
+                        x = mParentView.getWidth() - getWidth() - mPaddingRight;
                         break;
                 }
             }

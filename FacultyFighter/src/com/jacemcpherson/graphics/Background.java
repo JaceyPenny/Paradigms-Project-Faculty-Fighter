@@ -18,6 +18,8 @@ public class Background {
     BufferedImage mImage;
     Color mColor;
 
+    BufferedImage mBuffer = null;
+
     public Background(BufferedImage image, BackgroundType type) {
         this(image, type, null);
     }
@@ -43,7 +45,7 @@ public class Background {
         this(new Color(color));
     }
 
-    public void draw(Graphics g, BaseView onView) {
+    public void draw(Graphics g, int viewWidth, int viewHeight) {
         int width = 0;
         int height = 0;
         int x = 0;
@@ -51,29 +53,35 @@ public class Background {
 
         switch (mType) {
             case COLOR:
-                g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
+                g.setColor(mColor);
+                g.fillRect(0, 0, viewWidth, viewHeight);
                 break;
             case IMAGE:
                 if (mWithBackgroundColor) {
                     g.setColor(mColor);
-                    g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
+                    g.fillRect(0, 0, viewWidth, viewHeight);
                 }
                 g.drawImage(mImage, 0, 0, mImage.getWidth(), mImage.getHeight(), new Color(0x00000000), null);
                 break;
             case IMAGE_SCALED:
-                width = onView.getWidth();
-                height = Math.round(mImage.getHeight()  * ((float)width / mImage.getWidth()));
+                if (mBuffer == null) {
+                    mBuffer = new BufferedImage(viewWidth, viewHeight, BufferedImage.TYPE_INT_ARGB);
 
-                if (height < onView.getHeight()) {
-                    height = onView.getHeight();
-                    width = Math.round(mImage.getHeight() * ((float)height / mImage.getHeight()));
+                    width = viewWidth;
+                    height = Math.round(mImage.getHeight() * ((float) width / mImage.getWidth()));
+
+                    if (height < viewHeight) {
+                        height = viewHeight;
+                        width = Math.round(mImage.getHeight() * ((float) height / mImage.getHeight()));
+                    }
+
+                    mBuffer.getGraphics().drawImage(mImage, 0, 0, width, height, new Color(0x00FFFFFF), null);
                 }
-
-                g.drawImage(mImage, 0, 0, width, height, new Color(0x00FFFFFF), null);
+                g.drawImage(mBuffer, 0, 0, viewWidth, viewHeight, new Color(255, 255, 255, 0), null);
                 break;
             case IMAGE_TESS:
-                int compWidth = onView.getWidth();
-                int compHeight = onView.getHeight();
+                int compWidth = viewWidth;
+                int compHeight = viewHeight;
                 width = mImage.getWidth();
                 height = mImage.getHeight();
 
@@ -85,23 +93,23 @@ public class Background {
                 break;
             case IMAGE_CENTER_FIT:
                 float imageRatio = (float) mImage.getWidth() / mImage.getHeight();
-                float canvasRatio = (float) onView.getWidth() / onView.getHeight();
+                float canvasRatio = (float) viewWidth / viewHeight;
 
                 if (imageRatio > canvasRatio) {
-                    width = onView.getWidth();
+                    width = viewWidth;
                     height = Math.round(width / imageRatio);
                     x = 0;
-                    y = onView.getHeight() / 2 - height / 2;
+                    y = viewHeight / 2 - height / 2;
                 } else {
-                    height = onView.getHeight();
+                    height = viewHeight;
                     width = Math.round(height * imageRatio);
                     y = 0;
-                    x = onView.getWidth() / 2 - width / 2;
+                    x = viewWidth / 2 - width / 2;
                 }
 
                 if (mWithBackgroundColor) {
                     g.setColor(mColor);
-                    g.fillRect(0, 0, onView.getWidth(), onView.getHeight());
+                    g.fillRect(0, 0, viewWidth, viewHeight);
                 }
 
                 g.drawImage(mImage, x, y, width, height, mColor, null);
@@ -110,6 +118,14 @@ public class Background {
             default:
                 break;
         }
+    }
+
+    public void draw(BufferedImage image) {
+        draw(image.getGraphics(), image.getWidth(), image.getHeight());
+    }
+
+    public void draw(Graphics g, BaseView onView) {
+        draw(g, onView.getWidth(), onView.getHeight());
     }
 
 }

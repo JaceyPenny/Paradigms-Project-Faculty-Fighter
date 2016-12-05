@@ -19,14 +19,13 @@ public class Console {
         System.out.print("Terraria Paradigms v0.1alpha\n> ");
     }
 
-    public static void out(LogType type, String message) {
+    public static void out(LogType type, String message, Object... args) {
         System.out.printf(
                 "%s | %s: %s\n> ",
                 mFormatter.format(new Date()),
                 type.toString(),
-                message
+                String.format(message, args)
         );
-
     }
 
     public static void disableInput() {
@@ -83,20 +82,20 @@ public class Console {
         return mScanner.hasNext();
     }
 
-    public static void e(String message) {
-        out(LogType.ERROR, message);
+    public static void e(String message, Object... args) {
+        out(LogType.ERROR, message, args);
     }
 
-    public static void d(String message) {
-        out(LogType.DEBUG, message);
+    public static void d(String message, Object... args) {
+        out(LogType.DEBUG, message, args);
     }
 
-    public static void i(String message) {
-        out(LogType.INFO, message);
+    public static void i(String message, Object... args) {
+        out(LogType.INFO, message, args);
     }
 
-    public static void w(String message) {
-        out(LogType.WARNING, message);
+    public static void w(String message, Object... args) {
+        out(LogType.WARNING, message, args);
     }
 
     public static void exception(Exception e) {

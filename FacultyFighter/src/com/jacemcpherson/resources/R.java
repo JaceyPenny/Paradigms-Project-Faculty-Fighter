@@ -4,6 +4,9 @@ public class R {
 
     public class image {
         public static final String bg_splash = "image/bg_splash.png";
+
+        public static final String stage = "image/stage.png";
+
         public static final String menu_button_open = "image/menu_button_open.png";
         public static final String menu_button_hovered = "image/menu_button_hovered.png";
         public static final String menu_button_pressed = "image/menu_button_pressed.png";
@@ -18,6 +21,7 @@ public class R {
         public static final String player_punch = "image/player/player_punch.png";
         public static final String player_walk1 = "image/player/player_walk1.png";
         public static final String player_walk2 = "image/player/player_walk2.png";
+        public static final String player_block = "image/player/player_block.png";
 
         public static final String faculty_panda = "image/faculty/bpanda.png";
         public static final String faculty_cbobda = "image/faculty/cbobda.png";
@@ -32,12 +36,13 @@ public class R {
         public static final String faculty_mgashler = "image/faculty/mgashler.png";
         public static final String faculty_moustafa = "image/faculty/moustafa.png";
         public static final String faculty_mqhuang = "image/faculty/mqhuang.png";
-        public static final String faculty_patitz = "image/faculty/patitz.png";
         public static final String faculty_qinghual = "image/faculty/qinghual.png";
         public static final String faculty_rxp = "image/faculty/rxp.png";
         public static final String faculty_sgauch = "image/faculty/sgauch.png";
         public static final String faculty_wingning = "image/faculty/wingning.png";
         public static final String faculty_xintaowu = "image/faculty/xintaowu.png";
+
+        public static final String faculty_patitz = "image/faculty/patitz.png";
     }
 
     public class asset {

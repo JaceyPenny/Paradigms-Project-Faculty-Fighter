@@ -63,7 +63,7 @@ public class CharacterController extends BaseController {
         });
 
         MenuButton confirmButton = new MenuButton(getView(), 200, 64);
-        confirmButton.setText("Confirm");
+        confirmButton.setText("Fight!");
         confirmButton.setHorizontalGravity(BaseWidget.HorizontalGravity.RIGHT);
         confirmButton.setVerticalGravity(BaseWidget.VerticalGravity.BOTTOM);
         confirmButton.setPadding(0, 0, 20, 20);

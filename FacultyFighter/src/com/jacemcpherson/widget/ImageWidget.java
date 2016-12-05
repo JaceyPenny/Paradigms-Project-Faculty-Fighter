@@ -12,8 +12,6 @@ public class ImageWidget extends BaseWidget {
 
     BufferedImage mImage;
 
-    boolean mClickable = false;
-
     private Background OPEN = new Background(new Color(255, 255, 255, 0));
     private Background HOVERED = new Background(new Color(120, 120, 120, 255));
     private Background PRESSED = new Background(new Color(200, 200, 200, 255));
@@ -22,10 +20,7 @@ public class ImageWidget extends BaseWidget {
         super(parentView, image.getWidth(), image.getHeight());
         mImage = image;
         setBackground(OPEN);
-    }
-
-    public void setClickable(boolean clickable) {
-        mClickable = clickable;
+        setClickable(false);
     }
 
     @Override
@@ -41,7 +36,7 @@ public class ImageWidget extends BaseWidget {
 
     @Override
     public void updateBackground() {
-        if (mClickable) {
+        if (isClickable()) {
             switch (getMouseState()) {
                 case OPEN:
                     setBackground(OPEN);
@@ -58,7 +53,7 @@ public class ImageWidget extends BaseWidget {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (mClickable) {
+        if (isClickable()) {
             super.mouseReleased(e);
         }
     }

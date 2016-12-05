@@ -48,6 +48,8 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
 
     private BaseView mParentView;
 
+    private boolean mClickable = true;
+
     protected OnClickListener mOnClickListener = EMPTY_LISTENER;
 
     protected BaseWidget(BaseView parent, int width, int height) {
@@ -86,6 +88,14 @@ public abstract class BaseWidget implements MouseMotionListener, MouseListener, 
             Point position = calculatePosition();
             Draw.drawImage(g, mBufferedImage, position.x, position.y);
         }
+    }
+
+    public void setClickable(boolean clickable) {
+        mClickable = clickable;
+    }
+
+    public boolean isClickable() {
+        return mClickable;
     }
 
     public int getWidth() {

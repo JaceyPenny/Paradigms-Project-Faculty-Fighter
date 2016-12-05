@@ -139,7 +139,7 @@ public class Draw {
     }
 
     public static void drawImage(Graphics g, BufferedImage image, int x, int y, int width, int height) {
-        g.drawImage(image, x, y, width, height, new Color(0, 0, 0, 0), null);
+        g.drawImage(image, x, y, width, height, null);
     }
 
     public static void drawImage(Graphics g, BufferedImage image, Sizeable view, ImageDrawingOptions options) {

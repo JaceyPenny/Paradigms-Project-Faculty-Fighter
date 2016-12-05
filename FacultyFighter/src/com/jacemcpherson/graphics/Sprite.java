@@ -51,9 +51,9 @@ public class Sprite implements Sizeable {
     private String mName;
 
     private BufferedImage mImage;
-    private HashMap<String, BufferedImage> mAnimatedImages;
+    private HashMap<Integer, BufferedImage> mAnimatedImages;
 
-    private String mCurrentAnimation;
+    private int mCurrentAnimation;
 
     private SpriteType mType = SpriteType.STATIC;
 
@@ -68,13 +68,14 @@ public class Sprite implements Sizeable {
     public Sprite(BufferedImage image, SpriteOptions options) {
         mType = SpriteType.STATIC;
         mImage = image;
+        setSize(image.getWidth(), image.getHeight());
 
         applyOptions(options);
     }
 
-    public Sprite(HashMap<String, BufferedImage> animatedImages, SpriteOptions options) {
+    public Sprite(HashMap<Integer, BufferedImage> animatedImages, SpriteOptions options) {
         mType = SpriteType.ANIMATED;
-        mAnimatedImages = animatedImages;
+        setAnimation(animatedImages);
 
         applyOptions(options);
     }
@@ -91,6 +92,18 @@ public class Sprite implements Sizeable {
         }
     }
 
+    public void setAnimation(HashMap<Integer, BufferedImage> animatedImages) {
+        mAnimatedImages = animatedImages;
+
+        BufferedImage image = (BufferedImage) mAnimatedImages.values().toArray()[0];
+        mWidth = image.getWidth();
+        mHeight = image.getHeight();
+    }
+
+    public HashMap<Integer, BufferedImage> getAnimation() {
+        return mAnimatedImages;
+    }
+
     public void setSize(int width, int height) {
         switch (mType) {
             case STATIC:
@@ -105,7 +118,6 @@ public class Sprite implements Sizeable {
                 break;
             case ANIMATED:
                 Dimension resized = MathUtil.getScaled((BufferedImage) mAnimatedImages.values().toArray()[0], width, height);
-
                 mWidth = resized.width;
                 mHeight = resized.height;
                 break;
@@ -146,8 +158,12 @@ public class Sprite implements Sizeable {
         }
     }
 
-    public void setCurrentAnimation(String animation) {
+    public void setCurrentAnimation(int animation) {
         mCurrentAnimation = animation;
+    }
+
+    public int getCurrentAnimation() {
+        return mCurrentAnimation;
     }
 
     @Override

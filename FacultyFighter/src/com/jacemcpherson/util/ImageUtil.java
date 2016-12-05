@@ -4,6 +4,8 @@ import com.jacemcpherson.resources.R;
 import com.jacemcpherson.resources.Resources;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -134,11 +136,18 @@ public class ImageUtil {
         }
     }
 
+    public static BufferedImage flipImage(BufferedImage original) {
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-original.getWidth(null), 0);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(original, null);
+    }
+
     private static BufferedImage resizeImage(BufferedImage image, int width, int height) {
         Dimension result = MathUtil.getScaled(image, width, height);
 
-        width = (int)result.getWidth();
-        height = (int)result.getHeight();
+        width = result.width;
+        height = result.height;
 
         Image tmp = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

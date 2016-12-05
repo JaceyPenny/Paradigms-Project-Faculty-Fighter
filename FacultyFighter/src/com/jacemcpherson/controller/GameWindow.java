@@ -3,7 +3,6 @@ package com.jacemcpherson.controller;
 import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.exception.LastControllerException;
 import com.jacemcpherson.graphics.GameCanvas;
-import com.jacemcpherson.util.Console;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     int mWindowSize = 0;
 
     public GameWindow(Application application) {
-        setTitle("Terraria Paradigms");
+        setTitle("Faculty Fighter");
         setSize(windowSizes[mWindowSize]);
 
         // TODO: Comment this line out
@@ -108,7 +107,6 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     @Override
     public void keyPressed(KeyEvent e) {
         mControllers.peek().keyPressed(e);
-        Console.d("Key typed");
     }
 
     @Override

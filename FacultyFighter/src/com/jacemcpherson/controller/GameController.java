@@ -40,7 +40,7 @@ public class GameController extends BaseController {
                                 .build()
                 );
             } else {
-                getModel().togglePause();
+                getModel().setPaused(!getModel().isGamePaused());
             }
         } else {
             if (getModel().isGamePaused()) {
@@ -57,6 +57,10 @@ public class GameController extends BaseController {
                             .outDirection(TranslateViewAnimation.Direction.LEFT)
                             .build()
                     );
+                }
+                if (e.getKeyCode() == KeyEvent.VK_Q) {
+                    getModel().setPaused(false);
+                    getModel().endGame(null);
                 }
             }
             getModel().removeKeyPressed(e.getKeyCode());

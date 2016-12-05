@@ -2,7 +2,6 @@ package com.jacemcpherson.graphics;
 
 import com.jacemcpherson.resources.R;
 import com.jacemcpherson.resources.Resources;
-import com.jacemcpherson.util.Console;
 import com.jacemcpherson.util.ImageUtil;
 import com.jacemcpherson.util.MathUtil;
 
@@ -243,8 +242,6 @@ public class Player extends Sprite {
     }
 
     public boolean isFarRight() {
-        if (getPosition().x >= 640-getWidth())
-            Console.d("True");
         return getPosition().x >= 640-getWidth();
     }
 

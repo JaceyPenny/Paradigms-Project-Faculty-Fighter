@@ -56,6 +56,11 @@ public class GameView extends BaseView {
         gameSaved = true;
     }
 
+    public void setPaused(boolean paused) {
+        gameSaved = false;
+        gamePaused = paused;
+    }
+
     public void togglePause() {
         gameSaved = false;
         gamePaused = !gamePaused;
@@ -77,7 +82,7 @@ public class GameView extends BaseView {
         g.setStroke(new BasicStroke(3));
         g.drawRect(40, 20, mHealthBarLength, 20);
 
-        Draw.drawText(g, "Health", this,
+        Draw.drawText(g, "You (Dr. Patitz)", this,
                 new TextDrawingOptions()
                         .color(Color.black)
                         .position(40, 55)
@@ -114,7 +119,6 @@ public class GameView extends BaseView {
         );
 
 
-
         if (gamePaused) {
             g.setColor(new Color(0, 0, 0, 180));
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -143,15 +147,26 @@ public class GameView extends BaseView {
                             .shiftDown(56)
                             .font(FontUtil.gameFont(24f))
             );
-        } else {
-            Draw.drawText(g, "Press ESC to pause", this,
+
+            Draw.drawText(g, "Press 'Q' to quit this match", this,
                     new TextDrawingOptions()
-                            .color(Color.lightGray)
-                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
-                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.TOP)
-                            .padding(10, 70, 0, 0)
-                            .font(FontUtil.gameFont(18f))
+                            .color(Color.white)
+                            .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.CENTER)
+                            .verticalPosition(TextDrawingOptions.VerticalTextPosition.CENTER)
+                            .shiftDown(76)
+                            .font(FontUtil.gameFont(24f))
             );
+        } else {
+            if (!gameWon) {
+                Draw.drawText(g, "Press ESC to pause", this,
+                        new TextDrawingOptions()
+                                .color(Color.lightGray)
+                                .horizontalPosition(TextDrawingOptions.HorizontalTextPosition.LEFT)
+                                .verticalPosition(TextDrawingOptions.VerticalTextPosition.TOP)
+                                .padding(10, 70, 0, 0)
+                                .font(FontUtil.gameFont(18f))
+                );
+            }
         }
 
         if (gameWon) {

@@ -14,11 +14,16 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new Thread(
                 () -> Console.d("Closing")
         ));
+        loadGameState();
+    }
+
+    public void loadGameState() {
         mGameState = FileUtil.loadGameState();
     }
 
     public void saveGameState() {
         FileUtil.saveGameState(mGameState);
+        Console.i("Game has been saved successfully.");
     }
 
     public void initWindow() {

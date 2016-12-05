@@ -26,7 +26,7 @@ public class GameModel extends BaseModel {
         if (getGameState().isInGame()) {
             mPlayer = getGameState().getPlayer();
             mEnemy = getGameState().getEnemy();
-            togglePause();
+            setPaused(true);
         } else {
             mPlayer = new Player(-1, 180);
             mPlayer.setPosition(0, 220);
@@ -63,8 +63,9 @@ public class GameModel extends BaseModel {
         getGameState().setInGame(true);
     }
 
-    public void togglePause() {
-        gamePaused = !gamePaused;
+    public void setPaused(boolean paused) {
+        gamePaused = paused;
+
         if (gamePaused) {
             mPlayer.clearKeys();
             mEnemy.clearKeys();
@@ -74,7 +75,8 @@ public class GameModel extends BaseModel {
             if (enemyAI != null)
                 enemyAI.setPaused(false);
         }
-        getView().togglePause();
+
+        getView().setPaused(paused);
     }
 
     public void endGame(Player winner) {
@@ -85,7 +87,9 @@ public class GameModel extends BaseModel {
 
         String winningText;
 
-        if (winner == mPlayer) {
+        if (winner == null) {
+            winningText = "You have quit the game";
+        } else if (winner == mPlayer) {
             getGameState().incrementGamesWon();
             winningText = "You win!";
         } else {

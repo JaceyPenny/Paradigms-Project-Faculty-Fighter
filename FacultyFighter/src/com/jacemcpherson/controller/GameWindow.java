@@ -12,30 +12,24 @@ import java.util.Stack;
 public class GameWindow extends JFrame implements KeyListener, MouseListener, WindowListener {
 
     // the controller at the top of the stack will always be the visible controller
-    Stack<BaseController> mControllers = new Stack<>();
-    GameCanvas mCanvas;
+    private Stack<BaseController> mControllers = new Stack<>();
+    private GameCanvas mCanvas;
 
-    Dimension[] windowSizes = new Dimension[] {
-            new Dimension(640, 480),
-            new Dimension(720, 540),
-            new Dimension(1280, 720)
-    };
-
-    int mWindowSize = 0;
+    private Application mApplication;
 
     public GameWindow(Application application) {
-        setTitle("Faculty Fighter");
-        setSize(windowSizes[mWindowSize]);
+        mApplication = application;
 
-        // TODO: Comment this line out
-        //setDebugWindowLocation();
+        setTitle("Faculty Fighter");
+        setSize(640, 500);
 
         setResizable(false);
 
         mCanvas = new GameCanvas();
 
-        BaseController splashController = new SplashController(application);
+        SplashController splashController = new SplashController(application);
         mCanvas.setController(splashController);
+        setJMenuBar(createMenuBar());
         add(mCanvas, BorderLayout.CENTER);
 
         mControllers.push(splashController);
@@ -51,10 +45,72 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
         thread.start();
     }
 
+    public Application getApplication() {
+        return mApplication;
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu menu = new JMenu("Game");
+        menuBar.add(menu);
+
+        JMenuItem pauseItem = new JMenuItem("Pause");
+        pauseItem.addActionListener(e -> pauseGameIfPossible(pauseItem));
+        menu.add(pauseItem);
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(e -> getApplication().saveGameState());
+        menu.add(saveItem);
+
+        JMenuItem loadItem = new JMenuItem("Load");
+        loadItem.addActionListener(e -> reloadGame());
+        menu.add(loadItem);
+
+        JMenuItem exitWithoutSaving = new JMenuItem("Exit");
+        exitWithoutSaving.addActionListener(e -> close());
+        menu.add(exitWithoutSaving);
+
+        JMenuItem saveAndExit = new JMenuItem("Save and Exit");
+        saveAndExit.addActionListener(e -> {
+            getApplication().saveGameState();
+            close();
+        });
+        menu.add(saveAndExit);
+
+        return menuBar;
+    }
+
+    public void close() {
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    public void reloadGame() {
+        getApplication().loadGameState();
+        mControllers.clear();
+
+        SplashController splashController = new SplashController(getApplication());
+        mCanvas.setController(splashController);
+
+        mControllers.push(splashController);
+    }
+
     public void setDebugWindowLocation() {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
         setLocation(graphicsDevices[0].getDefaultConfiguration().getBounds().x, getY());
+    }
+
+    private void pauseGameIfPossible(JMenuItem pauseItem) {
+        if (mControllers.peek() instanceof GameController) {
+            GameController c = (GameController) mControllers.peek();
+            c.getModel().setPaused(!c.getModel().isGamePaused());
+            if (c.getModel().isGamePaused()) {
+                pauseItem.setText("Resume");
+            } else {
+                pauseItem.setText("Pause");
+            }
+        }
     }
 
     public GameCanvas getCanvas() {
@@ -87,19 +143,6 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener, Wi
     public void popController(ViewAnimation animation) throws LastControllerException {
         popController();
         mCanvas.animate(animation);
-    }
-
-    public void resizeWindow(int size) {
-        mWindowSize = size;
-        setSize(windowSizes[mWindowSize]);
-        if (mControllers.size() > 0) {
-            mCanvas.draw();
-            mControllers.peek().onResume();
-        }
-    }
-
-    public int getWindowSize() {
-        return mWindowSize;
     }
 
     @Override

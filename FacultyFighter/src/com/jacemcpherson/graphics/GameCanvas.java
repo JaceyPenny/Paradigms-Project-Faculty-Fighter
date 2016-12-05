@@ -2,7 +2,6 @@ package com.jacemcpherson.graphics;
 
 import com.jacemcpherson.animation.ViewAnimation;
 import com.jacemcpherson.controller.BaseController;
-import com.jacemcpherson.util.Console;
 import com.jacemcpherson.view.BaseView;
 
 import javax.swing.*;
@@ -35,7 +34,6 @@ public class GameCanvas extends Canvas implements Runnable, ActionListener {
 
     public void setController(BaseController controller) {
         mController = controller;
-        Console.d("GAMECANVAS Controller type: %s", mController.getClass().getSimpleName());
     }
 
     public BaseView getView() {

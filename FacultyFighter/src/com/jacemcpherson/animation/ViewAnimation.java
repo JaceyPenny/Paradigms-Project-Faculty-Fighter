@@ -6,7 +6,7 @@ import java.awt.*;
 
 public abstract class ViewAnimation {
 
-    public static final int GLOBAL_FPS = 30;
+    public static final int GLOBAL_FPS = 60;
 
     protected int mDurationFrames;
     protected int mCurrentFrame = 0;
